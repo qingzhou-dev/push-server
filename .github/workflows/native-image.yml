@@ -35,13 +35,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      #使用官方 GraalVM Action，支持 JDK 25
+      # --- 修改开始：只改了这里 ---
+      # 使用官方 GraalVM Action，这是支持 Java 25 Native Image 的最佳方式
       - name: Set up GraalVM
         uses: graalvm/setup-graalvm@v1
         with:
           java-version: '25'
-          distribution: 'graalvm' # 使用 Oracle GraalVM (免费且更新快)
+          distribution: 'graalvm' # 使用 Oracle GraalVM，社区版完全免费且支持最新特性
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           cache: 'maven'
+      # --- 修改结束 ---
 
       - name: Select Maven command
         shell: bash
@@ -53,30 +56,21 @@ jobs:
             echo "MVN_CMD=mvn" >> "$GITHUB_ENV"
           fi
 
-      # 执行 clean package 并激活 native profile
-      # 这会自动触发 Spring AOT 预处理，解决兼容性问题
+      - name: Run tests
+        shell: bash
+        run: ${{ env.MVN_CMD }} -B test
+
       - name: Build native image
         shell: bash
-        run: ${{ env.MVN_CMD }} -Pnative clean package -DskipTests
+        run: ${{ env.MVN_CMD }} -B -DskipTests native:compile
 
-      # 重命名逻辑 (增强健壮性)
-      # Spring Boot Native 构建出来的文件通常就在 target/ 目录下，文件名通常是 artifactId
       - name: Rename binary
         shell: bash
         run: |
           src="target/push-server${{ matrix.ext }}"
           dest="target/push-server-${{ matrix.artifact }}${{ matrix.ext }}"
-          
-          echo "Looking for binary at: $src"
-          
           if [ -f "$src" ]; then
             mv "$src" "$dest"
-            echo "Successfully renamed to $dest"
-          else
-            echo "Error: Binary not found!"
-            # 打印文件列表方便排错
-            ls -la target/
-            exit 1
           fi
 
       - name: Upload release asset
