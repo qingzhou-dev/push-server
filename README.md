@@ -6,7 +6,7 @@
 
 - JDK 25
 - Maven（或使用 `./mvnw`）
-- 本地构建 native image 需要 GraalVM JDK 25 + `native-image`
+- 本地构建 native image 需要 GraalVM JDK 25（包含 `native-image`）
 
 ## 配置
 
@@ -41,6 +41,24 @@ SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
 SPRING_PROFILES_ACTIVE=prod java -jar target/push-server-0.0.1-SNAPSHOT.jar
 ```
 
+## 服务使用
+
+- 默认端口来自 `server.port`（示例为 8000）
+- 默认 profile 由构建时的 Maven profile 决定（默认 prod），运行时可用 `SPRING_PROFILES_ACTIVE` 覆盖
+- 请求地址：`POST /api/push`
+- 鉴权：请求头 `X-API-Key` 必须等于 `push.auth.key`
+- 支持类型（`type`）：`text`（默认）、`markdown`、`text-card`、`image`、`news`
+- 通用字段：`target` 必填
+- 字段要求：
+  - `text`：`content`
+  - `markdown`：`title`、`content`
+  - `text-card`：`title`、`content`、`url`
+  - `image`：`mediaId`
+  - `news`：`articles`（每项必填 `title`、`url`，可选 `description`、`picUrl`）
+
+使用 Release 里的 native image 时，将 `config/application-prod.yml` 放在可执行文件同级的 `config/` 目录，
+然后直接运行 `./push-server`（Windows 为 `push-server.exe`）。
+
 ## 接口示例
 
 ```bash
@@ -58,8 +76,7 @@ curl -X POST "http://localhost:8000/api/push" \
 ## 本地构建 Native Image
 
 ```bash
-# 需要 GraalVM JDK 25，并安装 native-image 组件
-# gu install native-image
+# 需要 GraalVM JDK 25
 ./mvnw -DskipTests native:compile
 ```
 
@@ -67,5 +84,5 @@ curl -X POST "http://localhost:8000/api/push" \
 
 ## GitHub Actions
 
-仓库包含 `native-image` 工作流，会在 Linux / macOS / Windows 上构建 native image，
-并将可执行文件作为构建产物上传。
+仓库包含 `native-image` 工作流，在发布 Release 时构建 Linux / macOS / Windows 的 native image，
+并将可执行文件上传到 GitHub Releases 的 assets。

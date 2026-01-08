@@ -4,6 +4,11 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag to upload assets to (optional)"
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -55,7 +60,26 @@ jobs:
         shell: bash
         run: ${{ env.MVN_CMD }} -B -DskipTests native:compile
 
+      - name: Rename binary
+        shell: bash
+        run: |
+          src="target/push-server${{ matrix.ext }}"
+          dest="target/push-server-${{ matrix.artifact }}${{ matrix.ext }}"
+          if [ -f "$src" ]; then
+            mv "$src" "$dest"
+          fi
+
       - name: Upload release asset
+        if: github.event_name == 'release' || inputs.release_tag != ''
         uses: softprops/action-gh-release@v2
         with:
-          files: target/push-server${{ matrix.ext }}
+          tag_name: ${{ inputs.release_tag || github.ref_name }}
+          files: target/push-server-${{ matrix.artifact }}${{ matrix.ext }}
+
+      - name: Upload build artifact
+        if: github.event_name == 'workflow_dispatch' && inputs.release_tag == ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: push-server-${{ matrix.artifact }}
+          path: target/push-server-${{ matrix.artifact }}${{ matrix.ext }}
+          if-no-files-found: error
