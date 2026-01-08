@@ -1,0 +1,10 @@
+push:
+  auth:
+    key: 替换为自己的key
+  wecom:
+    app-key:
+    app-secret:
+    agent-id:
+    webhook-url:
+server:
+  port: 8000

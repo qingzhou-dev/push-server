@@ -1,0 +1,50 @@
+name: native-image
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact: linux
+            ext: ""
+          - os: macos-latest
+            artifact: macos
+            ext: ""
+          - os: windows-latest
+            artifact: windows
+            ext: ".exe"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up GraalVM
+        uses: actions/setup-java@v4
+        with:
+          distribution: graalvm
+          java-version: "25"
+          cache: maven
+
+      - name: Install native-image
+        shell: bash
+        run: gu install native-image
+
+      - name: Build native image
+        shell: bash
+        run: ./mvnw -DskipTests native:compile
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/push-server${{ matrix.ext }}

@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: push-server
+  profiles:
+    active: @spring.profiles.active@
+  config:
+    additional-location: "optional:file:./config/"
+
