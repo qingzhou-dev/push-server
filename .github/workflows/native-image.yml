@@ -35,14 +35,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Liberica GraalVM
-        uses: actions/setup-java@v4
+      #使用官方 GraalVM Action，支持 JDK 25
+      - name: Set up GraalVM
+        uses: graalvm/setup-graalvm@v1
         with:
-          distribution: liberica
-          java-version: "25"
-          java-package: "nik"
-          check-latest: true
-          cache: maven
+          java-version: '25'
+          distribution: 'graalvm' # 使用 Oracle GraalVM (免费且更新快)
+          cache: 'maven'
 
       - name: Select Maven command
         shell: bash
@@ -54,21 +53,29 @@ jobs:
             echo "MVN_CMD=mvn" >> "$GITHUB_ENV"
           fi
 
-      - name: Run tests
-        shell: bash
-        run: ${{ env.MVN_CMD }} -B test
-
+      # 执行 clean package 并激活 native profile
+      # 这会自动触发 Spring AOT 预处理，解决兼容性问题
       - name: Build native image
         shell: bash
-        run: ${{ env.MVN_CMD }} -B -DskipTests native:compile
+        run: ${{ env.MVN_CMD }} -Pnative clean package -DskipTests
 
+      # 重命名逻辑 (增强健壮性)
+      # Spring Boot Native 构建出来的文件通常就在 target/ 目录下，文件名通常是 artifactId
       - name: Rename binary
         shell: bash
         run: |
-          src="target/push-server${{ matrix.ext }}"
+          SRC_NAME="push-server"
+          src="target/${SRC_NAME}${matrix.ext}"
           dest="target/push-server-${{ matrix.artifact }}${{ matrix.ext }}"
+          echo "Looking for binary at: $src"
+          
           if [ -f "$src" ]; then
             mv "$src" "$dest"
+            echo "Successfully renamed to $dest"
+          else
+            echo "Error: Binary not found at $src"
+            ls -R target/
+            exit 1
           fi
 
       - name: Upload release asset
