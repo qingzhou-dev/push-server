@@ -36,9 +36,23 @@ jobs:
           java-version: "25"
           cache: maven
 
+      - name: Select Maven command
+        shell: bash
+        run: |
+          if [ -f ./mvnw ]; then
+            chmod +x ./mvnw
+            echo "MVN_CMD=./mvnw" >> "$GITHUB_ENV"
+          else
+            echo "MVN_CMD=mvn" >> "$GITHUB_ENV"
+          fi
+
+      - name: Run tests
+        shell: bash
+        run: ${{ env.MVN_CMD }} -B test
+
       - name: Build native image
         shell: bash
-        run: ./mvnw -DskipTests native:compile
+        run: ${{ env.MVN_CMD }} -B -DskipTests native:compile
 
       - name: Upload release asset
         uses: softprops/action-gh-release@v2
