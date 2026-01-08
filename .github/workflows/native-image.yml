@@ -35,11 +35,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up GraalVM
+      - name: Set up Liberica GraalVM
         uses: actions/setup-java@v4
         with:
-          distribution: graalvm
+          distribution: liberica
           java-version: "25"
+          java-package: "nik"
+          check-latest: true
           cache: maven
 
       - name: Select Maven command
