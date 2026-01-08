@@ -64,17 +64,18 @@ jobs:
       - name: Rename binary
         shell: bash
         run: |
-          SRC_NAME="push-server"
-          src="target/${SRC_NAME}${matrix.ext}"
+          src="target/push-server${{ matrix.ext }}"
           dest="target/push-server-${{ matrix.artifact }}${{ matrix.ext }}"
+          
           echo "Looking for binary at: $src"
           
           if [ -f "$src" ]; then
             mv "$src" "$dest"
             echo "Successfully renamed to $dest"
           else
-            echo "Error: Binary not found at $src"
-            ls -R target/
+            echo "Error: Binary not found!"
+            # 打印文件列表方便排错
+            ls -la target/
             exit 1
           fi
 
