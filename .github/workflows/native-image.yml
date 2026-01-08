@@ -36,10 +36,6 @@ jobs:
           java-version: "25"
           cache: maven
 
-      - name: Install native-image
-        shell: bash
-        run: gu install native-image
-
       - name: Build native image
         shell: bash
         run: ./mvnw -DskipTests native:compile
