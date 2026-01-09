@@ -121,8 +121,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            qingzhou/push-server
-            ghcr.io/qingzhou/push-server
+            qingzhoudev/push-server
+            ghcr.io/qingzhoudev/push-server
           tags: |
             type=ref,event=tag
             type=raw,value=latest
