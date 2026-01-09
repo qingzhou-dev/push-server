@@ -88,7 +88,7 @@ docker run -d \
   -e PUSH_WECOM_APP_KEY="你的应用AppKey" \
   -e PUSH_WECOM_APP_SECRET="你的应用AppSecret" \
   -e PUSH_WECOM_AGENT_ID="1000001" \
-  qingzhou/push-server:latest
+  qingzhoudev/push-server:latest
 
 ```
 

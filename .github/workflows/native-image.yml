@@ -122,7 +122,7 @@ jobs:
         with:
           images: |
             qingzhoudev/push-server
-            ghcr.io/qingzhoudev/push-server
+            ghcr.io/qingzhou-dev/push-server
           tags: |
             type=ref,event=tag
             type=raw,value=latest
