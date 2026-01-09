@@ -3,15 +3,10 @@ name: native-image
 on:
   release:
     types: [published]
-  workflow_dispatch:
-    inputs:
-      release_tag:
-        description: "Release tag to upload assets to (optional)"
-        required: false
-        type: string
 
 permissions:
   contents: write
+  packages: write
 
 jobs:
   build:
@@ -34,9 +29,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      # --- 修改开始：只改了这里 ---
-      # 使用官方 GraalVM Action，这是支持 Java 25 Native Image 的最佳方式
       - name: Set up Liberica NIK
         uses: graalvm/setup-graalvm@v1
         with:
@@ -44,7 +36,6 @@ jobs:
           distribution: 'liberica' # 这里指定使用 Liberica 发行版
           github-token: ${{ secrets.GITHUB_TOKEN }}
           cache: 'maven'
-      # --- 修改结束 ---
 
       - name: Select Maven command
         shell: bash
@@ -74,16 +65,73 @@ jobs:
           fi
 
       - name: Upload release asset
-        if: github.event_name == 'release' || inputs.release_tag != ''
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.release_tag || github.ref_name }}
+          tag_name: ${{ github.ref_name }}
           files: target/push-server-${{ matrix.artifact }}${{ matrix.ext }}
 
-      - name: Upload build artifact
-        if: github.event_name == 'workflow_dispatch' && inputs.release_tag == ''
-        uses: actions/upload-artifact@v4
+  docker:
+    name: docker (linux)
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Liberica NIK
+        uses: graalvm/setup-graalvm@v1
         with:
-          name: push-server-${{ matrix.artifact }}
-          path: target/push-server-${{ matrix.artifact }}${{ matrix.ext }}
-          if-no-files-found: error
+          java-version: '25'
+          distribution: 'liberica'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          cache: 'maven'
+
+      - name: Select Maven command
+        shell: bash
+        run: |
+          if [ -f ./mvnw ]; then
+            chmod +x ./mvnw
+            echo "MVN_CMD=./mvnw" >> "$GITHUB_ENV"
+          else
+            echo "MVN_CMD=mvn" >> "$GITHUB_ENV"
+          fi
+
+      - name: Build native image
+        shell: bash
+        run: ${{ env.MVN_CMD }} -B -Pnative -DskipTests native:compile
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            qingzhou/push-server
+            ghcr.io/qingzhou/push-server
+          tags: |
+            type=ref,event=tag
+            type=raw,value=latest
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
