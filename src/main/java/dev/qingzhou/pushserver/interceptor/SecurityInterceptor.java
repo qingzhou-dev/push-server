@@ -5,15 +5,18 @@ import dev.qingzhou.pushserver.config.PushProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 @Component
 public class SecurityInterceptor implements HandlerInterceptor {
+
+    private static final Logger log = LoggerFactory.getLogger(SecurityInterceptor.class);
 
     private final PushProperties properties;
     private final int maxFails;
