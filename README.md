@@ -3,7 +3,7 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0+-green.svg)
 ![Java](https://img.shields.io/badge/Java-25%2B-blue.svg)
 ![GraalVM](https://img.shields.io/badge/GraalVM-Native-orange.svg)
-![License](https://img.shields.io/badge/License-Apache%202.0-red.svg)
+![License](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
 
 **push-server** 是一个基于 Spring Boot 4 构建的轻量级企业微信推送服务。它封装了企业微信复杂的 API，对外提供极其简单的 HTTP 接口，支持 Docker 原生镜像部署（启动仅需 0.1s，内存占用 <50MB）。
 
