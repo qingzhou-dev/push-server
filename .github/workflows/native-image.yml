@@ -62,7 +62,7 @@ jobs:
 
       - name: Build native image
         shell: bash
-        run: ${{ env.MVN_CMD }} -B -DskipTests native:compile
+        run: ${{ env.MVN_CMD }} -B -Pnative -DskipTests native:compile
 
       - name: Rename binary
         shell: bash
