@@ -5,6 +5,8 @@ push:
     block-minutes: 30
     fail-window-minutes: 5
     max-fails: 5
+    rate-limit-capacity: 10
+    rate-limit-qps: 1
   wecom:
     app-key:
     app-secret:

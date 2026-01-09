@@ -83,10 +83,14 @@ public class PushProperties {
         public static final int DEFAULT_BLOCK_MINUTES = 30;
         public static final int DEFAULT_FAIL_WINDOW_MINUTES = 5;
         public static final int DEFAULT_MAX_FAILS = 5;
+        public static final long DEFAULT_RATE_LIMIT_CAPACITY = 10;
+        public static final long DEFAULT_RATE_LIMIT_QPS = 1;
 
         private Integer blockMinutes;
         private Integer failWindowMinutes;
         private Integer maxFails;
+        private Long rateLimitCapacity;
+        private Long rateLimitQps;
 
         public int getBlockMinutes() {
             return blockMinutes != null ? blockMinutes : DEFAULT_BLOCK_MINUTES;
@@ -110,6 +114,22 @@ public class PushProperties {
 
         public void setMaxFails(Integer maxFails) {
             this.maxFails = maxFails;
+        }
+
+        public long getRateLimitCapacity() {
+            return rateLimitCapacity != null ? rateLimitCapacity : DEFAULT_RATE_LIMIT_CAPACITY;
+        }
+
+        public void setRateLimitCapacity(Long rateLimitCapacity) {
+            this.rateLimitCapacity = rateLimitCapacity;
+        }
+
+        public long getRateLimitQps() {
+            return rateLimitQps != null ? rateLimitQps : DEFAULT_RATE_LIMIT_QPS;
+        }
+
+        public void setRateLimitQps(Long rateLimitQps) {
+            this.rateLimitQps = rateLimitQps;
         }
     }
 }

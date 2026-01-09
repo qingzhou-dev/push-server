@@ -173,7 +173,7 @@ curl -X POST http://localhost:8000/v1/push \
 ```
 
 `type` 为空时默认 `TEXT`，支持：`TEXT`、`MARKDOWN`、`TEXT_CARD`、`IMAGE`、`NEWS`。
-鉴权失败次数超过阈值时会触发封禁并返回 `429`，阈值与时长可在 `push.security` 中配置。
+鉴权失败次数超过阈值或触发限流时会返回 `429`，相关阈值可在 `push.security` 中配置。
 
 ---
 
@@ -193,6 +193,8 @@ push:
     block-minutes: 30      # 封禁时长（分钟）
     fail-window-minutes: 5 # 失败计数窗口（分钟）
     max-fails: 5           # 窗口内最大失败次数
+    rate-limit-capacity: 10 # 令牌桶容量（突发上限）
+    rate-limit-qps: 1        # 每秒生成令牌数
   wecom:
     app-key: ""     # 应用 AppKey
     app-secret: ""  # 应用 AppSecret

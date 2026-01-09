@@ -2,9 +2,9 @@ package dev.qingzhou.pushserver.interceptor;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import dev.qingzhou.pushserver.config.PushProperties;
+import dev.qingzhou.pushserver.utils.CasTokenBucket;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -27,6 +27,8 @@ public class SecurityInterceptor implements HandlerInterceptor {
     // 2. 失败计数缓存：Key=IP, Value=失败次数
     private final Cache<String, Integer> failCounts;
 
+    private final CasTokenBucket casTokenBucket;
+
     public SecurityInterceptor(PushProperties properties) {
         this.properties = properties;
         PushProperties.Security security = properties.getSecurity();
@@ -37,17 +39,18 @@ public class SecurityInterceptor implements HandlerInterceptor {
                 .expireAfterWrite(security.getFailWindowMinutes(), TimeUnit.MINUTES)
                 .build();
         this.maxFails = security.getMaxFails();
+        this.casTokenBucket = new CasTokenBucket(security.getRateLimitCapacity(), security.getRateLimitQps());
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String clientIp = getClientIp(request);
 
-        // --- 1. 检查是否在小黑屋 ---
-        if (blockList.getIfPresent(clientIp) != null) {
+        // --- 1. 检查是否在小黑屋,或者是否大量无意义请求，都需要限制 ---
+        if (!casTokenBucket.tryAcquire() || blockList.getIfPresent(clientIp) != null) {
             log.warn("Blocked request from IP: {}", clientIp);
             response.setStatus(429); // Too Many Requests
-            response.getWriter().write("IP Blocked due to too many failed attempts.");
+            response.getWriter().write("Too Many Requests.");
             return false;
         }
 
