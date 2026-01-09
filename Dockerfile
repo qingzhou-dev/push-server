@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.6
-FROM gcr.io/distroless/base-debian12
+FROM gcr.io/distroless/cc-debian12
 
 WORKDIR /app
 COPY --chmod=755 target/push-server /app/push-server
