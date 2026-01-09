@@ -1,6 +1,10 @@
 push:
   auth:
-    key: 替换为自己的key
+    key:
+  security:
+    block-minutes: 30
+    fail-window-minutes: 5
+    max-fails: 5
   wecom:
     app-key:
     app-secret:

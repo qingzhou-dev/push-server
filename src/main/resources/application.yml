@@ -5,3 +5,6 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:@spring.profiles.active@}
   config:
     additional-location: "optional:file:./config/"
+server:
+  servlet:
+    context-path: /api

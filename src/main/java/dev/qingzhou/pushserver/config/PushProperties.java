@@ -10,6 +10,7 @@ public class PushProperties {
 
     private final Auth auth = new Auth();
     private final Wecom wecom = new Wecom();
+    private final Security security = new Security();
 
     public Auth getAuth() {
         return auth;
@@ -17,6 +18,10 @@ public class PushProperties {
 
     public Wecom getWecom() {
         return wecom;
+    }
+
+    public Security getSecurity() {
+        return security;
     }
 
     public static class Auth {
@@ -71,6 +76,40 @@ public class PushProperties {
 
         public void setWebhookUrl(String webhookUrl) {
             this.webhookUrl = webhookUrl;
+        }
+    }
+
+    public static class Security {
+        public static final int DEFAULT_BLOCK_MINUTES = 30;
+        public static final int DEFAULT_FAIL_WINDOW_MINUTES = 5;
+        public static final int DEFAULT_MAX_FAILS = 5;
+
+        private Integer blockMinutes;
+        private Integer failWindowMinutes;
+        private Integer maxFails;
+
+        public int getBlockMinutes() {
+            return blockMinutes != null ? blockMinutes : DEFAULT_BLOCK_MINUTES;
+        }
+
+        public void setBlockMinutes(Integer blockMinutes) {
+            this.blockMinutes = blockMinutes;
+        }
+
+        public int getFailWindowMinutes() {
+            return failWindowMinutes != null ? failWindowMinutes : DEFAULT_FAIL_WINDOW_MINUTES;
+        }
+
+        public void setFailWindowMinutes(Integer failWindowMinutes) {
+            this.failWindowMinutes = failWindowMinutes;
+        }
+
+        public int getMaxFails() {
+            return maxFails != null ? maxFails : DEFAULT_MAX_FAILS;
+        }
+
+        public void setMaxFails(Integer maxFails) {
+            this.maxFails = maxFails;
         }
     }
 }
