@@ -1,0 +1,16 @@
+push:
+  auth:
+    key: "CHANGE_ME"
+  security:
+    block-minutes: 30
+    fail-window-minutes: 5
+    max-fails: 5
+    rate-limit-capacity: 10
+    rate-limit-qps: 1
+  wecom:
+    app-key: "CHANGE_ME"
+    app-secret: "CHANGE_ME"
+    agent-id: 1000001
+    webhook-url:
+server:
+  port: 8000

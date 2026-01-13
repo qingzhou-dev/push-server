@@ -89,14 +89,31 @@ docker run -d \
   -e PUSH_WECOM_APP_SECRET="你的应用AppSecret" \
   -e PUSH_WECOM_AGENT_ID="1000001" \
   qingzhoudev/push-server:latest
+  
+  #  安全设置，默认需要修改可以配置
+  docker run -d \
+  --name push-server \
+  -p 8000:8000 \
+  -e PUSH_AUTH_KEY="替换为自己的key" \
+  -e PUSH_WECOM_APP_KEY="你的应用AppKey" \
+  -e PUSH_WECOM_APP_SECRET="你的应用AppSecret" \
+  -e PUSH_WECOM_AGENT_ID="1000001" \
+  -e PUSH_SECURITY_BLOCK_MINUTES="30" \
+  -e PUSH_SECURITY_FAIL_WINDOW_MINUTES="5" \
+  -e PUSH_SECURITY_MAX_FAILS="5" \
+  -e PUSH_SECURITY_RATE_LIMIT_CAPACITY="10" \
+  -e PUSH_SECURITY_RATE_LIMIT_QPS="1" \
+  qingzhoudev/push-server:latest
 
 ```
 
+安全参数可选，不设置会使用默认值。
+
 ### 方式二：挂载配置文件 (推荐)
 
-如果你希望管理配置文件，可以挂载宿主机的 `application.yml`：
+默认激活 `prod` 环境（见 `spring.profiles.active`），建议挂载 `docker/application-prod.yml`：
 
-1. 创建 `application.yml` 文件：
+1. 创建 `docker/application-prod.yml` 文件：
 ```yaml
 push:
   auth:
@@ -105,6 +122,8 @@ push:
     block-minutes: 30
     fail-window-minutes: 5
     max-fails: 5
+    rate-limit-capacity: 10
+    rate-limit-qps: 1
   wecom:
     app-key: "你的应用AppKey"
     app-secret: "你的应用AppSecret"
@@ -119,9 +138,19 @@ push:
 docker run -d \
   --name push-server \
   -p 8000:8000 \
-  -v $(pwd)/application.yml:/workspace/config/application.yml \
+  -v $(pwd)/docker/application-prod.yml:/app/config/application-prod.yml \
   qingzhou/push-server:latest
 
+```
+
+如需切换到其他环境，设置 `SPRING_PROFILES_ACTIVE` 并挂载对应的 `application-<profile>.yml`。
+
+### 方式三：使用 Docker Compose
+
+仓库已提供 `docker/docker-compose.yml`，默认挂载 `docker/application-prod.yml`：
+
+```bash
+docker compose -f docker/docker-compose.yml up -d
 ```
 
 

@@ -1,0 +1,9 @@
+services:
+  push-server:
+    image: qingzhoudev/push-server:latest
+    container_name: push-server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./application-prod.yml:/app/config/application-prod.yml:ro
+    restart: unless-stopped
