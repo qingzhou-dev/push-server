@@ -81,7 +81,7 @@ flowchart LR
 直接将配置参数通过 `-e` 传入：
 
 ```bash
-docker run -d \
+  docker run -d \
   --name push-server \
   -p 8000:8000 \
   -e PUSH_AUTH_KEY="替换为自己的key" \
@@ -90,7 +90,7 @@ docker run -d \
   -e PUSH_WECOM_AGENT_ID="1000001" \
   qingzhoudev/push-server:latest
   
-  #  安全设置，默认需要修改可以配置
+  #  安全设置，默认值为下方值，需要修改添加环境变量修改
   docker run -d \
   --name push-server \
   -p 8000:8000 \
