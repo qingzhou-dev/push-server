@@ -144,7 +144,7 @@ docker run -d \
 **1. 发送普通文本 (Text)**
 
 ```bash
-curl -X POST http://localhost:8000/v1/push \
+curl -X POST http://localhost:8000/api/v1/push \
   -H "X-API-Key: 替换为自己的key" \
   -H "Content-Type: application/json" \
   -d '{
@@ -157,24 +157,45 @@ curl -X POST http://localhost:8000/v1/push \
 
 *注：`target` 为企业微信通讯录中的 `UserID`，多人用 `|` 分隔，`@all` 表示发给所有人。*
 
-**2. 发送 Markdown (推荐)**
+**2. 发送TEXT_CARD**
 
 ```bash
-curl -X POST http://localhost:8000/v1/push \
+curl -X POST http://localhost:8000/api/v1/push \
   -H "X-API-Key: 替换为自己的key" \
   -H "Content-Type: application/json" \
   -d '{
-    "target": "@all",
-    "type": "MARKDOWN",
-    "title": "生产环境告警",
-    "content": "**⚠️ 生产环境告警**\n> 服务：`Order-Service`\n> 状态：<font color=\"warning\">高负载 (90%)</font>\n> [查看详情](http://monitor.com)"
+    "target": "MaZePeng",
+    "type": "TEXT_CARD",
+    "title": "测试Push Server",
+    "content": "我是 Push Server，这是我作为服务端的第一条消息",
+    "url": "https://www.mazepeng.com"
   }'
 
 ```
 
-`type` 为空时默认 `TEXT`，支持：`TEXT`、`MARKDOWN`、`TEXT_CARD`、`IMAGE`、`NEWS`。
-鉴权失败次数超过阈值或触发限流时会返回 `429`，相关阈值可在 `push.security` 中配置。
+**3. 发送NEWS**
 
+```bash
+curl -X POST http://localhost:8000/api/v1/push \
+  -H "X-API-Key: 替换为自己的key" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "target": "MaZePeng",
+  "type": "NEWS",
+  "articles": [
+    {
+      "title": "测试 Article",
+      "description": "我是描述",
+      "url": "https://www.mazepeng.com",
+      "picUrl": "https://mazepeng.com/img/bg/a_larger_image_of_the_homepage.jpg"
+    }
+  ]
+}'
+
+```
+
+`type` 为空时默认 `TEXT`，支持：`TEXT`、`MARKDOWN`、`TEXT_CARD`、~~`IMAGE`~~、`NEWS`。IMAGE暂时未处理上传文件的逻辑，暂时不支持
+鉴权失败次数超过阈值或触发限流时会返回 `429`，相关阈值可在 `push.security` 中配置。
 ---
 
 ## ⚙️ 配置说明
