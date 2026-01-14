@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.qingzhou</groupId>
     <artifactId>push-server</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <name>push-server</name>
     <description>push-server</description>
     <url/>
@@ -108,11 +108,11 @@
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
                 <configuration>
-                    <!-- 这里换成你的 @SpringBootApplication 那个类 -->
                     <mainClass>dev.qingzhou.pushserver.PushServerApplication</mainClass>
                     <fallback>false</fallback>
                         <buildArgs>
                         <buildArg>-Djava.specification.version=25</buildArg>
+                        <buildArg>-march=compatibility</buildArg>
                         </buildArgs>
                 </configuration>
             </plugin>
