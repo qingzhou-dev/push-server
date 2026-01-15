@@ -1,0 +1,196 @@
+package dev.qingzhou.pushserver.service.impl;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.qingzhou.pushserver.exception.PortalException;
+import dev.qingzhou.pushserver.exception.PortalStatus;
+import dev.qingzhou.pushserver.manager.wecom.WecomApiClient;
+import dev.qingzhou.pushserver.manager.wecom.WecomMessagePayload;
+import dev.qingzhou.pushserver.manager.wecom.WecomSendResponse;
+import dev.qingzhou.pushserver.model.dto.portal.PortalMessageSendRequest;
+import dev.qingzhou.pushserver.model.dto.portal.PortalMessageType;
+import dev.qingzhou.pushserver.model.entity.portal.PortalCorpConfig;
+import dev.qingzhou.pushserver.model.entity.portal.PortalMessageLog;
+import dev.qingzhou.pushserver.model.entity.portal.PortalWecomApp;
+import dev.qingzhou.pushserver.service.PortalAccessTokenService;
+import dev.qingzhou.pushserver.service.PortalCorpConfigService;
+import dev.qingzhou.pushserver.service.PortalMessageLogService;
+import dev.qingzhou.pushserver.service.PortalMessageService;
+import dev.qingzhou.pushserver.service.PortalWecomAppService;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+@Service
+public class PortalMessageServiceImpl implements PortalMessageService {
+
+    private final PortalWecomAppService appService;
+    private final PortalCorpConfigService corpConfigService;
+    private final PortalAccessTokenService accessTokenService;
+    private final WecomApiClient wecomApiClient;
+    private final PortalMessageLogService messageLogService;
+    private final ObjectMapper objectMapper;
+
+    public PortalMessageServiceImpl(
+            PortalWecomAppService appService,
+            PortalCorpConfigService corpConfigService,
+            PortalAccessTokenService accessTokenService,
+            WecomApiClient wecomApiClient,
+            PortalMessageLogService messageLogService,
+            ObjectMapper objectMapper
+    ) {
+        this.appService = appService;
+        this.corpConfigService = corpConfigService;
+        this.accessTokenService = accessTokenService;
+        this.wecomApiClient = wecomApiClient;
+        this.messageLogService = messageLogService;
+        this.objectMapper = objectMapper;
+    }
+
+    @Override
+    public PortalMessageLog send(Long userId, PortalMessageSendRequest request) {
+        PortalWecomApp app = appService.requireByUser(userId, request.getAppId());
+        PortalCorpConfig corpConfig = corpConfigService.requireByUserId(userId);
+        String accessToken = accessTokenService.getToken(app.getId(), corpConfig.getCorpId(), app.getSecret());
+        WecomMessagePayload payload = buildPayload(app, request);
+        String requestJson = toJson(payload);
+        WecomSendResponse response = null;
+        String responseJson = null;
+        String errorMessage = null;
+        boolean success = false;
+        PortalMessageLog log = null;
+        try {
+            response = wecomApiClient.sendMessage(accessToken, payload);
+            responseJson = toJson(response);
+            success = response.isSuccess();
+            if (!success) {
+                errorMessage = response.getErrmsg();
+            }
+        } catch (PortalException ex) {
+            errorMessage = ex.getMessage();
+            throw ex;
+        } catch (Exception ex) {
+            errorMessage = ex.getMessage();
+            throw new PortalException(PortalStatus.BAD_GATEWAY, "Failed to send message", ex);
+        } finally {
+            log = buildLog(userId, app, request, requestJson, responseJson, success, errorMessage);
+            messageLogService.save(log);
+        }
+        if (!success && response != null) {
+            throw new PortalException(
+                    PortalStatus.BAD_REQUEST,
+                    "WeCom send failed: " + response.getErrmsg() + " (" + response.getErrcode() + ")"
+            );
+        }
+        return log;
+    }
+
+    private WecomMessagePayload buildPayload(PortalWecomApp app, PortalMessageSendRequest request) {
+        WecomMessagePayload payload = new WecomMessagePayload();
+        payload.setMsgtype(request.getMsgType().getValue());
+        payload.setAgentid(parseAgentId(app.getAgentId()));
+        if (request.isToAll()) {
+            payload.setTouser("@all");
+        } else {
+            payload.setTouser(normalizeTarget(request.getToUser()));
+            payload.setToparty(normalizeTarget(request.getToParty()));
+        }
+        if (!request.isToAll()
+                && !StringUtils.hasText(payload.getTouser())
+                && !StringUtils.hasText(payload.getToparty())) {
+            throw new PortalException(PortalStatus.BAD_REQUEST, "Recipient is required");
+        }
+        switch (request.getMsgType()) {
+            case TEXT -> payload.setText(buildText(request));
+            case MARKDOWN -> payload.setMarkdown(buildMarkdown(request));
+            case TEXT_CARD -> payload.setTextcard(buildTextCard(request));
+            default -> throw new PortalException(PortalStatus.BAD_REQUEST, "Unsupported message type");
+        }
+        return payload;
+    }
+
+    private WecomMessagePayload.Text buildText(PortalMessageSendRequest request) {
+        String content = requireText(request.getContent(), "content");
+        WecomMessagePayload.Text text = new WecomMessagePayload.Text();
+        text.setContent(content);
+        return text;
+    }
+
+    private WecomMessagePayload.Markdown buildMarkdown(PortalMessageSendRequest request) {
+        String content = requireText(request.getContent(), "content");
+        WecomMessagePayload.Markdown markdown = new WecomMessagePayload.Markdown();
+        markdown.setContent(content);
+        return markdown;
+    }
+
+    private WecomMessagePayload.TextCard buildTextCard(PortalMessageSendRequest request) {
+        String title = requireText(request.getTitle(), "title");
+        String description = requireText(request.getDescription(), "description");
+        String url = requireText(request.getUrl(), "url");
+        WecomMessagePayload.TextCard card = new WecomMessagePayload.TextCard();
+        card.setTitle(title);
+        card.setDescription(description);
+        card.setUrl(url);
+        card.setBtnText(request.getBtnText());
+        return card;
+    }
+
+    private PortalMessageLog buildLog(
+            Long userId,
+            PortalWecomApp app,
+            PortalMessageSendRequest request,
+            String requestJson,
+            String responseJson,
+            boolean success,
+            String errorMessage
+    ) {
+        PortalMessageLog log = new PortalMessageLog();
+        log.setUserId(userId);
+        log.setAppId(app.getId());
+        log.setAgentId(app.getAgentId());
+        log.setMsgType(request.getMsgType().getValue());
+        log.setToUser(request.getToUser());
+        log.setToParty(request.getToParty());
+        log.setToAll(request.isToAll() ? 1 : 0);
+        log.setTitle(request.getTitle());
+        log.setDescription(request.getDescription());
+        log.setUrl(request.getUrl());
+        if (request.getMsgType() == PortalMessageType.TEXT || request.getMsgType() == PortalMessageType.MARKDOWN) {
+            log.setContent(request.getContent());
+        }
+        log.setRequestJson(requestJson);
+        log.setResponseJson(responseJson);
+        log.setSuccess(success ? 1 : 0);
+        log.setErrorMessage(errorMessage);
+        log.setCreatedAt(System.currentTimeMillis());
+        return log;
+    }
+
+    private String normalizeTarget(String value) {
+        if (!StringUtils.hasText(value)) {
+            return null;
+        }
+        return value.trim();
+    }
+
+    private String requireText(String value, String field) {
+        if (!StringUtils.hasText(value)) {
+            throw new PortalException(PortalStatus.BAD_REQUEST, field + " is required");
+        }
+        return value.trim();
+    }
+
+    private long parseAgentId(String agentId) {
+        try {
+            return Long.parseLong(agentId.trim());
+        } catch (Exception ex) {
+            throw new PortalException(PortalStatus.BAD_REQUEST, "Invalid agentId");
+        }
+    }
+
+    private String toJson(Object value) {
+        try {
+            return objectMapper.writeValueAsString(value);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+}

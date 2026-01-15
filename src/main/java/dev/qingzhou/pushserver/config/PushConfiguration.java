@@ -4,6 +4,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties(PushProperties.class)
+@EnableConfigurationProperties({
+        PushProperties.class,
+        PortalWecomProperties.class,
+        PortalDataSourceProperties.class
+})
 public class PushConfiguration {
 }
