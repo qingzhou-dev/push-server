@@ -1,4 +1,4 @@
-package dev.qingzhou.pushserver.controller.portal;
+package dev.qingzhou.pushserver.controller;
 
 import dev.qingzhou.pushserver.common.PortalResponse;
 import dev.qingzhou.pushserver.common.PortalSessionSupport;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/portal/messages")
+@RequestMapping("/v2/messages")
 public class PortalMessageController {
 
     private final PortalMessageService messageService;

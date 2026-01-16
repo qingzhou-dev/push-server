@@ -1,3 +1,14 @@
 [
-  { "name": "com.github.benmanes.caffeine.cache.SSW", "allDeclaredConstructors": true }
+  { "name": "com.github.benmanes.caffeine.cache.SSW", "allDeclaredConstructors": true },
+  {
+    "name": "com.baomidou.mybatisplus.core.override.MybatisMapperProxy",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "org.apache.ibatis.binding.MapperProxy",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true
+  }
+
 ]

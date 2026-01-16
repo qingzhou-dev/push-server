@@ -9,5 +9,7 @@ public interface PortalUserService extends IService<PortalUser> {
 
     PortalUser authenticate(String account, String password);
 
+    PortalUser findByAccount(String account);
+
     void updatePassword(Long userId, String oldPassword, String newPassword);
 }

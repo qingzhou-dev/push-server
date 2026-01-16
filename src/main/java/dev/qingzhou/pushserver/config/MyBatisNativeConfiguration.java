@@ -5,14 +5,10 @@ import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.baomidou.mybatisplus.core.MybatisParameterHandler;
 import com.baomidou.mybatisplus.core.MybatisXMLLanguageDriver;
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.handlers.CompositeEnumTypeHandler;
 import com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler;
-import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
-import com.baomidou.mybatisplus.core.toolkit.support.SerializedLambda;
 import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import com.baomidou.mybatisplus.extension.handlers.GsonTypeHandler;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
@@ -109,6 +105,12 @@ public class MyBatisNativeConfiguration {
 
     static class MyBaitsRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 
+        // 你要批量注册的 DTO 包（可加多个）
+        private static final String[] DTO_PACKAGES = {
+                "dev.qingzhou.pushserver.model.dto",
+                "dev.qingzhou.pushserver.model.dto.portal"
+        };
+
         @Override
         public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
             Stream.of(RawLanguageDriver.class,
@@ -141,11 +143,7 @@ public class MyBatisNativeConfiguration {
                     "org/apache/ibatis/builder/xml/*.xsd"
             ).forEach(hints.resources()::registerPattern);
 
-            hints.serialization().registerType(SerializedLambda.class);
-            hints.serialization().registerType(SFunction.class);
             hints.serialization().registerType(java.lang.invoke.SerializedLambda.class);
-            hints.reflection().registerType(SFunction.class);
-            hints.reflection().registerType(SerializedLambda.class);
             hints.reflection().registerType(java.lang.invoke.SerializedLambda.class);
 
             hints.proxies().registerJdkProxy(StatementHandler.class);
@@ -155,8 +153,6 @@ public class MyBatisNativeConfiguration {
 
 //        hints.reflection().registerType(MybatisPlusInterceptor.class);
             hints.reflection().registerType(AbstractWrapper.class,MemberCategory.values());
-            hints.reflection().registerType(LambdaQueryWrapper.class,MemberCategory.values());
-            hints.reflection().registerType(LambdaUpdateWrapper.class,MemberCategory.values());
             hints.reflection().registerType(UpdateWrapper.class,MemberCategory.values());
             hints.reflection().registerType(QueryWrapper.class,MemberCategory.values());
 

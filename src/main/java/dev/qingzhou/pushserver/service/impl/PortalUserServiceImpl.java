@@ -1,12 +1,12 @@
 package dev.qingzhou.pushserver.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import dev.qingzhou.pushserver.exception.PortalException;
 import dev.qingzhou.pushserver.exception.PortalStatus;
 import dev.qingzhou.pushserver.mapper.portal.PortalUserMapper;
 import dev.qingzhou.pushserver.model.entity.portal.PortalUser;
 import dev.qingzhou.pushserver.service.PortalUserService;
-import java.util.Objects;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -43,11 +43,21 @@ public class PortalUserServiceImpl extends ServiceImpl<PortalUserMapper, PortalU
         if (!StringUtils.hasText(account) || !StringUtils.hasText(password)) {
             throw new PortalException(PortalStatus.BAD_REQUEST, "Account and password are required");
         }
-        PortalUser user = lambdaQuery().eq(PortalUser::getAccount, account.trim()).one();
+        PortalUser user = findByAccount(account);
         if (user == null || !passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new PortalException(PortalStatus.UNAUTHORIZED, "Invalid credentials");
         }
         return user;
+    }
+
+    @Override
+    public PortalUser findByAccount(String account) {
+        if (!StringUtils.hasText(account)) {
+            return null;
+        }
+        QueryWrapper<PortalUser> wrapper = new QueryWrapper<>();
+        wrapper.eq("account", account.trim());
+        return getOne(wrapper);
     }
 
     @Override
@@ -68,9 +78,8 @@ public class PortalUserServiceImpl extends ServiceImpl<PortalUserMapper, PortalU
     }
 
     private boolean existsAccount(String account) {
-        return Objects.nonNull(lambdaQuery()
-                .select(PortalUser::getId)
-                .eq(PortalUser::getAccount, account.trim())
-                .one());
+        QueryWrapper<PortalUser> wrapper = new QueryWrapper<>();
+        wrapper.eq("account", account.trim());
+        return count(wrapper) > 0;
     }
 }

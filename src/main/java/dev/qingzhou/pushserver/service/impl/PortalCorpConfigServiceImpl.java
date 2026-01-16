@@ -1,5 +1,6 @@
 package dev.qingzhou.pushserver.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import dev.qingzhou.pushserver.exception.PortalException;
 import dev.qingzhou.pushserver.exception.PortalStatus;
@@ -14,7 +15,9 @@ public class PortalCorpConfigServiceImpl extends ServiceImpl<PortalCorpConfigMap
 
     @Override
     public PortalCorpConfig getByUserId(Long userId) {
-        return lambdaQuery().eq(PortalCorpConfig::getUserId, userId).one();
+        QueryWrapper<PortalCorpConfig> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId);
+        return getOne(wrapper);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package dev.qingzhou.pushserver.controller.portal;
+package dev.qingzhou.pushserver.controller;
 
 import dev.qingzhou.pushserver.common.PortalResponse;
 import dev.qingzhou.pushserver.common.PortalSessionSupport;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/portal/corp")
+@RequestMapping("/v2/corp")
 public class PortalCorpController {
 
     private final PortalCorpConfigService corpConfigService;

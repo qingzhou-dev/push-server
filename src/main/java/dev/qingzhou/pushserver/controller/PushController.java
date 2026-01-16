@@ -1,4 +1,4 @@
-package dev.qingzhou.pushserver.controller.openapi;
+package dev.qingzhou.pushserver.controller;
 
 import dev.qingzhou.push.core.model.PushResult;
 import dev.qingzhou.pushserver.config.PushProperties;

@@ -1,5 +1,6 @@
 package dev.qingzhou.pushserver.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import dev.qingzhou.pushserver.exception.PortalException;
 import dev.qingzhou.pushserver.exception.PortalStatus;
@@ -60,10 +61,10 @@ public class PortalWecomAppServiceImpl extends ServiceImpl<PortalWecomAppMapper,
 
     @Override
     public List<PortalWecomApp> listByUser(Long userId) {
-        return lambdaQuery()
-                .eq(PortalWecomApp::getUserId, userId)
-                .orderByDesc(PortalWecomApp::getCreatedAt)
-                .list();
+        QueryWrapper<PortalWecomApp> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId)
+                .orderByDesc("created_at");
+        return list(wrapper);
     }
 
     @Override
@@ -97,10 +98,9 @@ public class PortalWecomAppServiceImpl extends ServiceImpl<PortalWecomAppMapper,
     }
 
     private boolean existsApp(Long userId, String agentId) {
-        return lambdaQuery()
-                .select(PortalWecomApp::getId)
-                .eq(PortalWecomApp::getUserId, userId)
-                .eq(PortalWecomApp::getAgentId, agentId.trim())
-                .one() != null;
+        QueryWrapper<PortalWecomApp> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId)
+                .eq("agent_id", agentId.trim());
+        return count(wrapper) > 0;
     }
 }
