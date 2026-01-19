@@ -3,7 +3,8 @@ package dev.qingzhou.pushserver.model.dto.portal;
 public enum PortalMessageType {
     TEXT("text"),
     TEXT_CARD("textcard"),
-    MARKDOWN("markdown");
+    MARKDOWN("markdown"),
+    NEWS("news");
 
     private final String value;
 

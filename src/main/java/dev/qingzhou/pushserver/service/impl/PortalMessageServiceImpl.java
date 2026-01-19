@@ -16,6 +16,8 @@ import dev.qingzhou.pushserver.service.PortalCorpConfigService;
 import dev.qingzhou.pushserver.service.PortalMessageLogService;
 import dev.qingzhou.pushserver.service.PortalMessageService;
 import dev.qingzhou.pushserver.service.PortalWecomAppService;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -102,6 +104,7 @@ public class PortalMessageServiceImpl implements PortalMessageService {
             case TEXT -> payload.setText(buildText(request));
             case MARKDOWN -> payload.setMarkdown(buildMarkdown(request));
             case TEXT_CARD -> payload.setTextcard(buildTextCard(request));
+            case NEWS -> payload.setNews(buildNews(request));
             default -> throw new PortalException(PortalStatus.BAD_REQUEST, "Unsupported message type");
         }
         return payload;
@@ -133,6 +136,32 @@ public class PortalMessageServiceImpl implements PortalMessageService {
         return card;
     }
 
+    private WecomMessagePayload.News buildNews(PortalMessageSendRequest request) {
+        List<PortalMessageSendRequest.PortalNewsArticle> items = request.getArticles();
+        if (items == null || items.isEmpty()) {
+            throw new PortalException(PortalStatus.BAD_REQUEST, "articles is required");
+        }
+        List<WecomMessagePayload.Article> articles = new ArrayList<>(items.size());
+        for (PortalMessageSendRequest.PortalNewsArticle item : items) {
+            if (item == null) {
+                throw new PortalException(PortalStatus.BAD_REQUEST, "article cannot be null");
+            }
+            WecomMessagePayload.Article article = new WecomMessagePayload.Article();
+            article.setTitle(requireText(item.getTitle(), "articles.title"));
+            article.setUrl(requireText(item.getUrl(), "articles.url"));
+            if (StringUtils.hasText(item.getDescription())) {
+                article.setDescription(item.getDescription().trim());
+            }
+            if (StringUtils.hasText(item.getPicUrl())) {
+                article.setPicUrl(item.getPicUrl().trim());
+            }
+            articles.add(article);
+        }
+        WecomMessagePayload.News news = new WecomMessagePayload.News();
+        news.setArticles(articles);
+        return news;
+    }
+
     private PortalMessageLog buildLog(
             Long userId,
             PortalWecomApp app,
@@ -155,6 +184,12 @@ public class PortalMessageServiceImpl implements PortalMessageService {
         log.setUrl(request.getUrl());
         if (request.getMsgType() == PortalMessageType.TEXT || request.getMsgType() == PortalMessageType.MARKDOWN) {
             log.setContent(request.getContent());
+        } else if (request.getMsgType() == PortalMessageType.NEWS && request.getArticles() != null
+                && !request.getArticles().isEmpty()) {
+            PortalMessageSendRequest.PortalNewsArticle first = request.getArticles().get(0);
+            log.setTitle(first.getTitle());
+            log.setDescription(first.getDescription());
+            log.setUrl(first.getUrl());
         }
         log.setRequestJson(requestJson);
         log.setResponseJson(responseJson);
