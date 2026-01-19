@@ -76,7 +76,7 @@ public class PortalAppController {
     ) {
         Long userId = PortalSessionSupport.requireUserId(session);
         PortalAppApiKey record = apiKeyService.findByAppId(userId, appId);
-        return PortalResponse.ok(toApiKeyResponse(appId, record, null));
+        return PortalResponse.ok(toApiKeyResponse(appId, record));
     }
 
     @PostMapping("/{appId}/api-key/reset")
