@@ -53,6 +53,24 @@ public class PortalSchemaInitializer {
                 )
                 """);
         statements.add("""
+                CREATE TABLE IF NOT EXISTS v2_app_api_key (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    app_id INTEGER NOT NULL UNIQUE,
+                    api_key_hash TEXT NOT NULL,
+                    api_key_plain TEXT NOT NULL,
+                    rate_limit_per_minute INTEGER NOT NULL DEFAULT 0,
+                    created_at INTEGER NOT NULL,
+                    updated_at INTEGER NOT NULL
+                )
+                """);
+        statements.add("""
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_v2_app_api_key_hash
+                ON v2_app_api_key(api_key_hash)
+                """);
+        List<String> alterStatements = new ArrayList<>();
+        alterStatements.add("ALTER TABLE v2_app_api_key ADD COLUMN api_key_plain TEXT NOT NULL DEFAULT ''");
+        alterStatements.add("ALTER TABLE v2_app_api_key ADD COLUMN rate_limit_per_minute INTEGER NOT NULL DEFAULT 0");
+        statements.add("""
                 CREATE TABLE IF NOT EXISTS v2_message_log (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id INTEGER NOT NULL,
@@ -78,6 +96,13 @@ public class PortalSchemaInitializer {
             try (Statement statement = connection.createStatement()) {
                 for (String sql : statements) {
                     statement.execute(sql);
+                }
+                for (String sql : alterStatements) {
+                    try {
+                        statement.execute(sql);
+                    } catch (Exception ignored) {
+                        // Column may already exist; ignore migration errors to stay backward compatible.
+                    }
                 }
             }
         } catch (Exception ex) {

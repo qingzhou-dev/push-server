@@ -7,6 +7,7 @@ public enum PortalStatus {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED),
     NOT_FOUND(HttpStatus.NOT_FOUND),
     CONFLICT(HttpStatus.CONFLICT),
+    TOO_MANY_REQUESTS(HttpStatus.TOO_MANY_REQUESTS),
     BAD_GATEWAY(HttpStatus.BAD_GATEWAY);
 
     private final HttpStatus httpStatus;

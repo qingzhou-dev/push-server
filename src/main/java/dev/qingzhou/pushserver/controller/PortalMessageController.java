@@ -4,6 +4,7 @@ import dev.qingzhou.pushserver.common.PortalResponse;
 import dev.qingzhou.pushserver.common.PortalSessionSupport;
 import dev.qingzhou.pushserver.model.dto.portal.PortalMessageSendRequest;
 import dev.qingzhou.pushserver.model.entity.portal.PortalMessageLog;
+import dev.qingzhou.pushserver.model.vo.portal.PortalMessageLogConverter;
 import dev.qingzhou.pushserver.model.vo.portal.PortalMessageLogResponse;
 import dev.qingzhou.pushserver.service.PortalMessageLogService;
 import dev.qingzhou.pushserver.service.PortalMessageService;
@@ -37,7 +38,7 @@ public class PortalMessageController {
     ) {
         Long userId = PortalSessionSupport.requireUserId(session);
         PortalMessageLog log = messageService.send(userId, request);
-        return PortalResponse.ok(toResponse(log));
+        return PortalResponse.ok(PortalMessageLogConverter.toResponse(log));
     }
 
     @GetMapping("/logs")
@@ -47,27 +48,8 @@ public class PortalMessageController {
     ) {
         Long userId = PortalSessionSupport.requireUserId(session);
         List<PortalMessageLogResponse> logs = messageLogService.listRecent(userId, limit).stream()
-                .map(this::toResponse)
+                .map(PortalMessageLogConverter::toResponse)
                 .collect(Collectors.toList());
         return PortalResponse.ok(logs);
-    }
-
-    private PortalMessageLogResponse toResponse(PortalMessageLog log) {
-        PortalMessageLogResponse response = new PortalMessageLogResponse();
-        response.setId(log.getId());
-        response.setAppId(log.getAppId());
-        response.setAgentId(log.getAgentId());
-        response.setMsgType(log.getMsgType());
-        response.setToUser(log.getToUser());
-        response.setToParty(log.getToParty());
-        response.setToAll(log.getToAll() != null && log.getToAll() == 1);
-        response.setTitle(log.getTitle());
-        response.setDescription(log.getDescription());
-        response.setUrl(log.getUrl());
-        response.setContent(log.getContent());
-        response.setSuccess(log.getSuccess() != null && log.getSuccess() == 1);
-        response.setErrorMessage(log.getErrorMessage());
-        response.setCreatedAt(log.getCreatedAt());
-        return response;
     }
 }
