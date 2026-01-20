@@ -107,13 +107,14 @@ public class PortalSecurityConfig {
                         // 静态资源和登录接口放行
                         .requestMatchers("/","/api/login", "/login", "/index.html", "/assets/**", "/favicon.ico", "/api/captcha").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/api/v2/openapi/**").permitAll()
                         .requestMatchers("/api/v2/auth/register", "/api/v2/auth/csrf").permitAll()
                         .requestMatchers("/api/v1/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf
                         .spa()
-                        .ignoringRequestMatchers("/api/v1/**", "/api/login", "/api/captcha")
+                        .ignoringRequestMatchers("/api/v1/**", "/api/login", "/api/captcha", "/api/v2/openapi/**")
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED)
