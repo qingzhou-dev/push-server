@@ -6,6 +6,7 @@ import dev.qingzhou.pushserver.model.dto.portal.PortalMessageSendRequest;
 import dev.qingzhou.pushserver.model.entity.portal.PortalMessageLog;
 import dev.qingzhou.pushserver.model.vo.portal.PortalMessageLogConverter;
 import dev.qingzhou.pushserver.model.vo.portal.PortalMessageLogResponse;
+import dev.qingzhou.pushserver.model.vo.portal.PortalPageResponse;
 import dev.qingzhou.pushserver.service.PortalMessageLogService;
 import dev.qingzhou.pushserver.service.PortalMessageService;
 import jakarta.servlet.http.HttpSession;
@@ -42,12 +43,33 @@ public class PortalMessageController {
     }
 
     @GetMapping("/logs")
-    public PortalResponse<List<PortalMessageLogResponse>> logs(
+    public PortalResponse<?> logs(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer pageSize,
             @RequestParam(defaultValue = "20") int limit,
+            @RequestParam(required = false) Boolean success,
+            @RequestParam(required = false) Long appId,
             HttpSession session
     ) {
         Long userId = PortalSessionSupport.requireUserId(session);
-        List<PortalMessageLogResponse> logs = messageLogService.listRecent(userId, limit).stream()
+        boolean usePagination = page != null || pageSize != null;
+        if (usePagination) {
+            int resolvedPage = page == null ? 1 : page;
+            int resolvedPageSize = pageSize == null ? 20 : pageSize;
+            PortalPageResponse<PortalMessageLog> pagedLogs = messageLogService.pageLogs(userId, appId, success, resolvedPage, resolvedPageSize);
+            List<PortalMessageLogResponse> records = pagedLogs.getRecords().stream()
+                    .map(PortalMessageLogConverter::toResponse)
+                    .collect(Collectors.toList());
+            PortalPageResponse<PortalMessageLogResponse> response = PortalPageResponse.of(
+                    records,
+                    pagedLogs.getTotal(),
+                    pagedLogs.getPage(),
+                    pagedLogs.getPageSize()
+            );
+            return PortalResponse.ok(response);
+        }
+
+        List<PortalMessageLogResponse> logs = messageLogService.listRecent(userId, limit, appId, success).stream()
                 .map(PortalMessageLogConverter::toResponse)
                 .collect(Collectors.toList());
         return PortalResponse.ok(logs);
