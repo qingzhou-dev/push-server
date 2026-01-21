@@ -5,7 +5,7 @@
 ![GraalVM](https://img.shields.io/badge/GraalVM-Native-orange.svg)
 ![License](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
 
-**push-server** 是一个基于 Spring Boot 4 构建的轻量级企业微信推送服务。它封装了企业微信复杂的 API，对外提供极其简单的 HTTP 接口，支持 Docker 原生镜像部署（启动仅需 0.1s，内存占用 <50MB）。
+**push-server** 是一个基于 Spring Boot 4 构建的、带管理后台的轻量级企业微信推送服务。它封装了企业微信复杂的 API，对外提供极其简单的 HTTP 接口，支持 Docker 原生镜像部署（启动仅需 0.1s，内存占用 <50MB）。
 
 ---
 
@@ -22,53 +22,21 @@ flowchart LR
   A[业务系统 / 服务] -->|HTTP请求| B[push-server]
   B -->|企业微信 API| C[企业微信服务端]
     C --> D[微信 App]
-
 ```
-
-最终效果是：
-**用户在微信中收到消息，但技术通道使用的是企业微信。**
-
-### 为什么选择企业微信？
-
-相比微信公众号，企业微信具备天然的系统通知优势：
-
-* ✅ **无缝触达**：消息最终可到达 **微信 App**（需关注插件）。
-* ✅ **主动推送**：支持无限制的主动消息推送，适合告警、通知。
-* ✅ **稳定合规**：官方允许的系统消息通道，不涉及内容风控。
-* ✅ **简单易用**：无需复杂的模板消息申请，开发接口清晰。
-
-**push-server** 的角色非常纯粹：它不关心业务含义，只作为一个**可靠的消息投递管道**。
 
 ---
 
 ## ⚡️ 核心特性
 
-* **轻量级**：基于 Spring Boot 4 + GraalVM Native Image，极致的启动速度和资源占用。
-* **开箱即用**：无需数据库，无需复杂配置，只需填写 API Key 即可运行。
-* **标准化 API**：统一的 HTTP 接口，屏蔽不同渠道的实现细节。
+* **轻量级 & 高性能**：基于 Spring Boot 4 + GraalVM Native Image，极致的启动速度和资源占用。
+* **Web 管理后台**：内置 Web UI，支持在线完成所有配置（企业微信、应用、API Key），查看推送日志和统计报表。
+* **多应用隔离**：支持管理多个企业微信应用，每个应用拥有独立 API Key 和限流策略。
+* **开箱即用**：无需外部数据库，无需复杂配置，首次运行后通过 Web 页面即可完成初始化。
+* **标准化 API (V2)**：提供 RESTful API，支持更细粒度的推送控制。
+* **兼容旧版 (V1)**：保留旧版 API 以实现平滑迁移。
 * **容器友好**：提供 Docker 镜像，支持环境变量配置，完美适配 K8s。
 * **扩展性强**：底层依赖 `push-core`，基于 SPI 架构，易于扩展其他渠道。
-* **安全拦截**：API Key 校验 + 失败次数封禁，降低暴力请求风险。
-
----
-
-## 🛠 前置准备
-
-在使用本服务前，你需要完成企业微信侧的配置：
-
-1. **注册企业微信**：个人也可以免费注册。
-2. **创建自建应用**：
-* 进入 [企业微信管理后台](https://work.weixin.qq.com/wework_admin/frame) -> `应用管理` -> `创建应用`。
-* 获取 **AgentId** 和 **Secret**（对应配置中的 `push.wecom.agent-id` 与 `push.wecom.app-secret`）。
-* 获取 **企业ID (CorpId)**（对应配置中的 `push.wecom.app-key`）。
-
-
-3. **关键步骤**：
-* 进入 `我的企业` -> `微信插件`。
-* 用你的个人微信扫描二维码，**关注该企业**。
-* *注意：只有关注后，消息才能直接在微信 App 中通过“服务通知”弹出。*
-
-
+* **安全可靠**：支持 API Key 级别的速率限制 (Rate Limit)。
 
 ---
 
@@ -76,181 +44,76 @@ flowchart LR
 
 推荐使用 Docker 运行，无需安装 Java 环境。
 
-### 方式一：使用环境变量启动 (最快)
-
-直接将配置参数通过 `-e` 传入：
-
-```bash
-  docker run -d \
-  --name push-server \
-  -p 8000:8000 \
-  -e PUSH_AUTH_KEY="替换为自己的key" \
-  -e PUSH_WECOM_APP_KEY="你的应用AppKey" \
-  -e PUSH_WECOM_APP_SECRET="你的应用AppSecret" \
-  -e PUSH_WECOM_AGENT_ID="1000001" \
-  qingzhoudev/push-server:latest
-  
-  #  安全设置，默认值为下方值，需要修改添加环境变量修改
-  docker run -d \
-  --name push-server \
-  -p 8000:8000 \
-  -e PUSH_AUTH_KEY="替换为自己的key" \
-  -e PUSH_WECOM_APP_KEY="你的应用AppKey" \
-  -e PUSH_WECOM_APP_SECRET="你的应用AppSecret" \
-  -e PUSH_WECOM_AGENT_ID="1000001" \
-  -e PUSH_SECURITY_BLOCK_MINUTES="30" \
-  -e PUSH_SECURITY_FAIL_WINDOW_MINUTES="5" \
-  -e PUSH_SECURITY_MAX_FAILS="5" \
-  -e PUSH_SECURITY_RATE_LIMIT_CAPACITY="10" \
-  -e PUSH_SECURITY_RATE_LIMIT_QPS="1" \
-  qingzhoudev/push-server:latest
-
-```
-
-安全参数可选，不设置会使用默认值。
-
-### 方式二：挂载配置文件 (推荐)
-
-默认激活 `prod` 环境（见 `spring.profiles.active`），建议挂载 `docker/application-prod.yml`：
-
-1. 创建 `docker/application-prod.yml` 文件：
-```yaml
-push:
-  auth:
-    key: "替换为自己的key"
-  security:
-    block-minutes: 30
-    fail-window-minutes: 5
-    max-fails: 5
-    rate-limit-capacity: 10
-    rate-limit-qps: 1
-  wecom:
-    app-key: "你的应用AppKey"
-    app-secret: "你的应用AppSecret"
-    agent-id: "1000001"
-    webhook-url:
-
-```
-
-
-2. 启动容器：
 ```bash
 docker run -d \
   --name push-server \
   -p 8000:8000 \
-  -v $(pwd)/docker/application-prod.yml:/app/config/application-prod.yml \
-  qingzhou/push-server:latest
-
+  -v $(pwd)/data:/app/data \
+  qingzhoudev/push-server:latest
 ```
-
-如需切换到其他环境，设置 `SPRING_PROFILES_ACTIVE` 并挂载对应的 `application-<profile>.yml`。
-
-### 方式三：使用 Docker Compose
-
-仓库已提供 `docker/docker-compose.yml`，默认挂载 `docker/application-prod.yml`：
-
-```bash
-docker compose -f docker/docker-compose.yml up -d
-```
-
-
+* **数据持久化**: `-v $(pwd)/data:/app/data` 会将应用数据（包括 SQLite 数据库）保存到当前目录下的 `data` 文件夹中。
+* **首次运行**: 启动后，访问 `http://localhost:8000`，根据页面引导完成管理员账号和企业微信的初始化配置。
 
 ---
 
 ## 🔌 API 文档
 
-服务启动后，默认监听 `8000` 端口。
+**push-server** 提供 V2 和 V1 两套 API。**强烈推荐使用 V2 API**。
 
-### 发送消息接口
+### V2 API (推荐)
 
-* **URL**: `/v1/push`
+V2 API 提供了更强大、更标准的功能。
+
+* **鉴权**: 使用在 **Portal 管理后台** -> **应用管理** 中为每个应用生成的 **API Key**。在请求时，将其放入 `X-API-Key` Header 中。
+* **详细文档**: 完整的 API 定义和示例请参考 [**V2 OpenAPI 文档**](./docs/openapi-v2.md)。
+
+**调用示例 (发送文本消息):**
+```bash
+curl -X POST http://localhost:8000/api/v2/openapi/messages/send \
+  -H "X-API-Key: 您在后台生成的App API Key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "toUser": "ZhangSan|LiSi",
+    "msgType": "text",
+    "content": "系统通知：您的任务已构建完成。"
+  }'
+```
+
+### V1 API (兼容)
+
+V1 API 为保持向后兼容而保留。
+
+* **鉴权**: 使用在 `application.yml` (或环境变量 `PUSH_AUTH_KEY`) 中配置的**全局 Token**。
+* **URL**: `/api/v1/push`
 * **Method**: `POST`
-* **Content-Type**: `application/json`
 * **Header**: `X-API-Key: <push.auth.key>`
 
-#### 请求参数示例
-
-**1. 发送普通文本 (Text)**
-
+**调用示例 (发送文本消息):**
 ```bash
 curl -X POST http://localhost:8000/api/v1/push \
-  -H "X-API-Key: 替换为自己的key" \
+  -H "X-API-Key: 全局Token" \
   -H "Content-Type: application/json" \
   -d '{
     "target": "ZhangSan|LiSi",
     "type": "TEXT",
     "content": "系统通知：您的任务已构建完成。"
   }'
-
 ```
 
-*注：`target` 为企业微信通讯录中的 `UserID`，多人用 `|` 分隔，`@all` 表示发给所有人。*
-
-**2. 发送TEXT_CARD**
-
-```bash
-curl -X POST http://localhost:8000/api/v1/push \
-  -H "X-API-Key: 替换为自己的key" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "target": "MaZePeng",
-    "type": "TEXT_CARD",
-    "title": "测试Push Server",
-    "content": "我是 Push Server，这是我作为服务端的第一条消息",
-    "url": "https://www.mazepeng.com"
-  }'
-
-```
-
-**3. 发送NEWS**
-
-```bash
-curl -X POST http://localhost:8000/api/v1/push \
-  -H "X-API-Key: 替换为自己的key" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "target": "MaZePeng",
-  "type": "NEWS",
-  "articles": [
-    {
-      "title": "测试 Article",
-      "description": "我是描述",
-      "url": "https://www.mazepeng.com",
-      "picUrl": "https://mazepeng.com/img/bg/a_larger_image_of_the_homepage.jpg"
-    }
-  ]
-}'
-
-```
-
-`type` 为空时默认 `TEXT`，支持：`TEXT`、`MARKDOWN`、`TEXT_CARD`、~~`IMAGE`~~、`NEWS`。IMAGE暂时未处理上传文件的逻辑，暂时不支持
-鉴权失败次数超过阈值或触发限流时会返回 `429`，相关阈值可在 `push.security` 中配置。
 ---
 
-## ⚙️ 配置说明
+## ⚙️ V1 配置说明 (不推荐)
 
-完整的 `application.yml` 配置项如下：
+以下配置仅适用于旧版 V1 API。V2 的所有配置均在 Portal 后台在线完成。
 
 ```yaml
-server:
-  port: 8000
-
+# application-prod.yml
 push:
   auth:
-    key: "替换为自己的key"
-  security:
-    # 如果不配置或配置为 null，则使用默认值
-    block-minutes: 30      # 封禁时长（分钟）
-    fail-window-minutes: 5 # 失败计数窗口（分钟）
-    max-fails: 5           # 窗口内最大失败次数
-    rate-limit-capacity: 10 # 令牌桶容量（突发上限）
-    rate-limit-qps: 1        # 每秒生成令牌数
+    key: "v1-global-token" # V1 使用的全局 Token
   wecom:
-    app-key: ""     # 应用 AppKey
-    app-secret: ""  # 应用 AppSecret
-    agent-id: ""    # 应用 AgentId
-    webhook-url: "" # 可选
-
+    app-key: "你的企业ID"      # V1 使用
+    app-secret: "你的应用Secret" # V1 使用
+    agent-id: "你的应用AgentID"   # V1 使用
 ```
-
 ---
