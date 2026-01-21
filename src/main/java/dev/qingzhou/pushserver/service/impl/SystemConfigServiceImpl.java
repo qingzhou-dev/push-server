@@ -1,6 +1,6 @@
 package dev.qingzhou.pushserver.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import dev.qingzhou.pushserver.mapper.portal.PortalSystemConfigMapper;
 import dev.qingzhou.pushserver.model.entity.portal.PortalSystemConfig;
 import dev.qingzhou.pushserver.service.SystemConfigService;
@@ -28,7 +28,7 @@ public class SystemConfigServiceImpl implements SystemConfigService {
     @Override
     public String get(String key, String defaultValue) {
         PortalSystemConfig config = configMapper.selectOne(
-                new LambdaQueryWrapper<PortalSystemConfig>().eq(PortalSystemConfig::getConfigKey, key)
+                new QueryWrapper<PortalSystemConfig>().eq("config_key", key)
         );
         return config != null ? config.getConfigValue() : defaultValue;
     }
@@ -37,7 +37,7 @@ public class SystemConfigServiceImpl implements SystemConfigService {
     @Transactional
     public void set(String key, String value) {
         PortalSystemConfig config = configMapper.selectOne(
-                new LambdaQueryWrapper<PortalSystemConfig>().eq(PortalSystemConfig::getConfigKey, key)
+                new QueryWrapper<PortalSystemConfig>().eq("config_key", key)
         );
         if (config == null) {
             config = new PortalSystemConfig();

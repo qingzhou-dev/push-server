@@ -18,7 +18,7 @@ public class CaptchaController {
     public record CaptchaResponse(boolean enabled, String siteKey) {
     }
 
-    @GetMapping(value = {"/captcha", "/api/captcha"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/captcha", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CaptchaResponse> captcha() {
         return ResponseEntity.ok(new CaptchaResponse(
                 configService.isTurnstileEnabled(),
