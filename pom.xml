@@ -106,6 +106,7 @@
                     <include>application.yml</include>
                     <include>application.properties</include>
                     <include>**/*.json</include>
+                    <include>**/*.xml</include>
                 </includes>
             </resource>
 
@@ -113,11 +114,6 @@
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
                 <includes>
-                    <include>**/*.ttf</include>
-                    <include>**/*.woff</include>
-                    <include>**/*.woff2</include>
-                    <include>**/*.eot</include>
-                    <include>**/*.ico</include>
                     <include>static/**</include>
                     <include>templates/**</include>
                 </includes>
@@ -165,7 +161,6 @@
                             <buildArg>--initialize-at-run-time=org.apache.ibatis</buildArg>
 
                             <buildArg>--initialize-at-run-time=org.mybatis</buildArg>
-                            <buildArg>--initialize-at-run-time=java.awt.image.BufferedImage</buildArg>
                             <buildArg>--initialize-at-run-time=org.apache.ibatis.logging</buildArg>
                             <buildArg>--initialize-at-run-time=org.apache.ibatis.logging.LogFactory</buildArg>
                         </buildArgs>

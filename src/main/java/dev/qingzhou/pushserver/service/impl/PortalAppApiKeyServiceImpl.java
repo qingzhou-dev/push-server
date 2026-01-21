@@ -1,5 +1,7 @@
 package dev.qingzhou.pushserver.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import dev.qingzhou.pushserver.exception.PortalException;
 import dev.qingzhou.pushserver.exception.PortalStatus;
@@ -35,9 +37,8 @@ public class PortalAppApiKeyServiceImpl extends ServiceImpl<PortalAppApiKeyMappe
         PortalWecomApp app = appService.requireByUser(userId, appId);
         String rawKey = generateKey();
         String hash = hashKey(rawKey);
-        PortalAppApiKey existing = lambdaQuery()
-                .eq(PortalAppApiKey::getAppId, app.getId())
-                .one();
+        PortalAppApiKey existing = getOne(new QueryWrapper<PortalAppApiKey>()
+                .eq("app_id", app.getId()));
         long now = System.currentTimeMillis();
         if (existing == null) {
             PortalAppApiKey record = new PortalAppApiKey();
@@ -60,16 +61,14 @@ public class PortalAppApiKeyServiceImpl extends ServiceImpl<PortalAppApiKeyMappe
     @Override
     public PortalAppApiKey findByAppId(Long userId, Long appId) {
         PortalWecomApp app = appService.requireByUser(userId, appId);
-        return lambdaQuery()
-                .eq(PortalAppApiKey::getAppId, app.getId())
-                .one();
+        return getOne(new QueryWrapper<PortalAppApiKey>()
+                .eq("app_id", app.getId()));
     }
 
     @Override
     public void removeByAppId(Long appId) {
-        lambdaUpdate()
-                .eq(PortalAppApiKey::getAppId, appId)
-                .remove();
+        remove(new QueryWrapper<PortalAppApiKey>()
+                .eq("app_id", appId));
         rateLimiter.evict(appId);
     }
 
@@ -79,9 +78,8 @@ public class PortalAppApiKeyServiceImpl extends ServiceImpl<PortalAppApiKeyMappe
             throw new PortalException(PortalStatus.BAD_REQUEST, "rateLimitPerMinute must be >= 0");
         }
         PortalWecomApp app = appService.requireByUser(userId, appId);
-        PortalAppApiKey record = lambdaQuery()
-                .eq(PortalAppApiKey::getAppId, app.getId())
-                .one();
+        PortalAppApiKey record = getOne(new QueryWrapper<PortalAppApiKey>()
+                .eq("app_id", app.getId()));
         if (record == null) {
             throw new PortalException(PortalStatus.NOT_FOUND, "API key not found");
         }
@@ -97,9 +95,8 @@ public class PortalAppApiKeyServiceImpl extends ServiceImpl<PortalAppApiKeyMappe
             throw new PortalException(PortalStatus.UNAUTHORIZED, "Missing API key");
         }
         String hash = hashKey(apiKey.trim());
-        PortalAppApiKey record = lambdaQuery()
-                .eq(PortalAppApiKey::getApiKeyHash, hash)
-                .one();
+        PortalAppApiKey record = getOne(new QueryWrapper<PortalAppApiKey>()
+                .eq("api_key_hash", hash));
         if (record == null) {
             throw new PortalException(PortalStatus.UNAUTHORIZED, "Invalid API key");
         }
