@@ -35,7 +35,7 @@ flowchart LR
 * **标准化 API (V2)**：提供 RESTful API，支持更细粒度的推送控制。
 * **兼容旧版 (V1)**：保留旧版 API 以实现平滑迁移。
 * **容器友好**：提供 Docker 镜像，支持环境变量配置，完美适配 K8s。
-* **扩展性强**：底层依赖 `push-core`，基于 SPI 架构，易于扩展其他渠道。
+* **扩展性强**：V1 基于 `push-core` SPI 架构；V2 采用原生独立实现，针对 GraalVM 深度优化。
 * **安全可靠**：支持 API Key 级别的速率限制 (Rate Limit)。
 
 ---
