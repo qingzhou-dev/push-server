@@ -6,6 +6,11 @@ import java.util.List;
 
 public class OpenApiMessageSendRequest {
 
+    // Compatibility fields for v1
+    private String target;
+    private String type;
+
+    // v2 fields
     private String toUser;
     private String toParty;
     private Boolean toAll;
@@ -17,8 +22,35 @@ public class OpenApiMessageSendRequest {
     private String btnText;
     private List<PortalMessageSendRequest.PortalNewsArticle> articles;
 
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+        if (type != null) {
+            try {
+                this.msgType = PortalMessageType.valueOf(type.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Ignore invalid type string, fallback to default or existing msgType
+            }
+        }
+    }
+
     public String getToUser() {
-        return toUser;
+        String effectiveUser = (toUser == null && target != null) ? target : toUser;
+        if ("@all".equalsIgnoreCase(effectiveUser)) {
+            return null; // Handled by getToAll()
+        }
+        return effectiveUser;
     }
 
     public void setToUser(String toUser) {
@@ -34,11 +66,18 @@ public class OpenApiMessageSendRequest {
     }
 
     public boolean isToAll() {
-        return Boolean.TRUE.equals(toAll);
+        return Boolean.TRUE.equals(getToAll());
     }
 
     public Boolean getToAll() {
-        return toAll;
+        if (Boolean.TRUE.equals(toAll)) {
+            return true;
+        }
+        // Support "@all" in target or toUser
+        if ("@all".equalsIgnoreCase(target) || "@all".equalsIgnoreCase(toUser)) {
+            return true;
+        }
+        return false;
     }
 
     public void setToAll(Boolean toAll) {
