@@ -9,7 +9,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class PortalAdminInitializer implements ApplicationRunner {
 
     private static final Logger log = LoggerFactory.getLogger(PortalAdminInitializer.class);

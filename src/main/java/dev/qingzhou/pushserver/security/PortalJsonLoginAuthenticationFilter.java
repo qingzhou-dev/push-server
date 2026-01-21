@@ -56,7 +56,7 @@ public class PortalJsonLoginAuthenticationFilter extends AbstractAuthenticationP
             throw new AuthenticationServiceException("Account and password are required");
         }
 
-        captchaService.validate(request.getSession(false), captcha);
+        captchaService.validate(captcha);
         UsernamePasswordAuthenticationToken authRequest =
                 new UsernamePasswordAuthenticationToken(account, password);
         authRequest.setDetails(authenticationDetailsSource.buildDetails(request));

@@ -1,42 +1,47 @@
 package dev.qingzhou.pushserver.security;
 
-import dev.qingzhou.pushserver.common.PortalSessionKeys;
-import jakarta.servlet.http.HttpSession;
-import java.security.SecureRandom;
+import dev.qingzhou.pushserver.service.SystemConfigService;
+import java.util.Map;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestClient;
 
 @Service
 public class CaptchaService {
 
-    private static final String CAPTCHA_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    private static final int CAPTCHA_LENGTH = 5;
+    private static final String VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+    private final SystemConfigService configService;
+    private final RestClient restClient;
 
-    private final SecureRandom random = new SecureRandom();
-
-    public String generate(HttpSession session) {
-        StringBuilder builder = new StringBuilder(CAPTCHA_LENGTH);
-        for (int i = 0; i < CAPTCHA_LENGTH; i++) {
-            int index = random.nextInt(CAPTCHA_CHARS.length());
-            builder.append(CAPTCHA_CHARS.charAt(index));
-        }
-        String code = builder.toString();
-        session.setAttribute(PortalSessionKeys.CAPTCHA, code);
-        return code;
+    public CaptchaService(SystemConfigService configService) {
+        this.configService = configService;
+        this.restClient = RestClient.create();
     }
 
-    public void validate(HttpSession session, String input) {
-        if (session == null) {
-            throw new BadCredentialsException("Captcha expired");
+    public void validate(String input) {
+        if (!configService.isTurnstileEnabled()) {
+            return;
         }
-        Object stored = session.getAttribute(PortalSessionKeys.CAPTCHA);
-        session.removeAttribute(PortalSessionKeys.CAPTCHA);
-        if (!(stored instanceof String expected) || !StringUtils.hasText(input)) {
-            throw new BadCredentialsException("Captcha invalid");
+
+        if (!StringUtils.hasText(input)) {
+            throw new BadCredentialsException("Captcha token is required");
         }
-        if (!expected.equalsIgnoreCase(input.trim())) {
-            throw new BadCredentialsException("Captcha invalid");
+
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("secret", configService.getTurnstileSecretKey());
+        formData.add("response", input);
+
+        Map result = restClient.post()
+                .uri(VERIFY_URL)
+                .body(formData)
+                .retrieve()
+                .body(Map.class);
+
+        if (result == null || !Boolean.TRUE.equals(result.get("success"))) {
+            throw new BadCredentialsException("Captcha verification failed");
         }
     }
 }

@@ -21,6 +21,14 @@ public class PortalSchemaInitializer {
     public void initialize() {
         List<String> statements = new ArrayList<>();
         statements.add("""
+                CREATE TABLE IF NOT EXISTS v2_system_config (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    config_key TEXT NOT NULL UNIQUE,
+                    config_value TEXT,
+                    updated_at INTEGER NOT NULL
+                )
+                """);
+        statements.add("""
                 CREATE TABLE IF NOT EXISTS v2_user (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     account TEXT NOT NULL UNIQUE,

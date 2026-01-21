@@ -106,6 +106,7 @@ public class PortalSecurityConfig {
         http.authorizeHttpRequests(authorize -> authorize
                         // 静态资源和登录接口放行
                         .requestMatchers("/","/api/login", "/login", "/index.html", "/assets/**", "/favicon.ico", "/api/captcha").permitAll()
+                        .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/v2/openapi/**").permitAll()
                         .requestMatchers("/api/v2/auth/register", "/api/v2/auth/csrf").permitAll()
