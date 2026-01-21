@@ -46,9 +46,8 @@ public class DashboardServiceImpl implements DashboardService {
         long todaySuccess = countLogs(userId, startOfDay, 1);
         double successRate = todayTotal == 0 ? 0.0 : todaySuccess * 100.0 / todayTotal;
 
-        long activeApps = appService.lambdaQuery()
-                .eq(PortalWecomApp::getUserId, userId)
-                .count();
+        long activeApps = appService.count(new QueryWrapper<PortalWecomApp>()
+                .eq("user_id", userId));
 
         PortalMessageLog lastError = messageLogService.getOne(new QueryWrapper<PortalMessageLog>()
                 .eq("user_id", userId)
@@ -126,14 +125,18 @@ public class DashboardServiceImpl implements DashboardService {
             counts.put(date, 0L);
         }
 
+        // Optimize: Only select created_at
         List<PortalMessageLog> logs = messageLogService.list(new QueryWrapper<PortalMessageLog>()
+                .select("created_at")
                 .eq("user_id", userId)
                 .ge("created_at", startMillis));
+                
         for (PortalMessageLog log : logs) {
             if (log.getCreatedAt() == null) {
                 continue;
             }
             LocalDate date = Instant.ofEpochMilli(log.getCreatedAt()).atZone(ZONE).toLocalDate();
+            // Ensure the date is within our 7-day window
             if (!date.isBefore(startDate) && !date.isAfter(today)) {
                 counts.put(date, counts.getOrDefault(date, 0L) + 1);
             }
@@ -149,6 +152,7 @@ public class DashboardServiceImpl implements DashboardService {
     private List<DashboardChartsResponse.DistributionSlice> buildDistribution(Long userId, Map<Long, String> appNames) {
         long startMillis = atStartOfDayMillis(29);
         List<PortalMessageLog> logs = messageLogService.list(new QueryWrapper<PortalMessageLog>()
+                .select("app_id") // Optimize: Only select app_id
                 .eq("user_id", userId)
                 .ge("created_at", startMillis));
         Map<Long, Long> counts = new HashMap<>();
@@ -179,9 +183,8 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     private Map<Long, String> loadAppNames(Long userId) {
-        List<PortalWecomApp> apps = appService.lambdaQuery()
-                .eq(PortalWecomApp::getUserId, userId)
-                .list();
+        List<PortalWecomApp> apps = appService.list(new QueryWrapper<PortalWecomApp>()
+                .eq("user_id", userId));
         if (apps == null || apps.isEmpty()) {
             return Collections.emptyMap();
         }
