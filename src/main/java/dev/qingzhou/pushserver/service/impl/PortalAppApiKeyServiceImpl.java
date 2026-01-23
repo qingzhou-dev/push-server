@@ -75,13 +75,13 @@ public class PortalAppApiKeyServiceImpl extends ServiceImpl<PortalAppApiKeyMappe
     @Override
     public PortalAppApiKey updateRateLimit(Long userId, Long appId, Integer rateLimitPerMinute) {
         if (rateLimitPerMinute != null && rateLimitPerMinute < 0) {
-            throw new PortalException(PortalStatus.BAD_REQUEST, "rateLimitPerMinute must be >= 0");
+            throw new PortalException(PortalStatus.BAD_REQUEST, "每分钟速率限制必须大于等于 0");
         }
         PortalWecomApp app = appService.requireByUser(userId, appId);
         PortalAppApiKey record = getOne(new QueryWrapper<PortalAppApiKey>()
                 .eq("app_id", app.getId()));
         if (record == null) {
-            throw new PortalException(PortalStatus.NOT_FOUND, "API key not found");
+            throw new PortalException(PortalStatus.NOT_FOUND, "未找到 API Key");
         }
         record.setRateLimitPerMinute(rateLimitPerMinute == null ? 0 : rateLimitPerMinute);
         record.setUpdatedAt(System.currentTimeMillis());
@@ -92,17 +92,17 @@ public class PortalAppApiKeyServiceImpl extends ServiceImpl<PortalAppApiKeyMappe
     @Override
     public AppAuthContext requireAppByApiKey(String apiKey) {
         if (!StringUtils.hasText(apiKey)) {
-            throw new PortalException(PortalStatus.UNAUTHORIZED, "Missing API key");
+            throw new PortalException(PortalStatus.UNAUTHORIZED, "缺少 API Key");
         }
         String hash = hashKey(apiKey.trim());
         PortalAppApiKey record = getOne(new QueryWrapper<PortalAppApiKey>()
                 .eq("api_key_hash", hash));
         if (record == null) {
-            throw new PortalException(PortalStatus.UNAUTHORIZED, "Invalid API key");
+            throw new PortalException(PortalStatus.UNAUTHORIZED, "无效的 API Key");
         }
         PortalWecomApp app = appService.getById(record.getAppId());
         if (app == null) {
-            throw new PortalException(PortalStatus.UNAUTHORIZED, "Invalid API key");
+            throw new PortalException(PortalStatus.UNAUTHORIZED, "无效的 API Key");
         }
         rateLimiter.check(record);
         return new AppAuthContext(record, app);

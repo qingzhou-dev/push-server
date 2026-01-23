@@ -40,11 +40,11 @@ public class PortalAppApiKeyRateLimiter {
         }
         Long appId = apiKey.getAppId();
         if (appId == null) {
-            throw new PortalException(PortalStatus.BAD_REQUEST, "API key record invalid");
+            throw new PortalException(PortalStatus.BAD_REQUEST, "API Key 记录无效");
         }
         WindowCounter counter = buckets.computeIfAbsent(appId, ignored -> new WindowCounter());
         if (!counter.tryAcquire(limit)) {
-            throw new PortalException(PortalStatus.TOO_MANY_REQUESTS, "API key rate limit exceeded");
+            throw new PortalException(PortalStatus.TOO_MANY_REQUESTS, "API Key 速率限制已超出");
         }
     }
 

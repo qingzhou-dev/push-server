@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PortalMessageSendRequest {
 
-    @NotNull
+    @NotNull(message = "应用 ID 不能为空")
     private Long appId;
     private String toUser;
     private String toParty;

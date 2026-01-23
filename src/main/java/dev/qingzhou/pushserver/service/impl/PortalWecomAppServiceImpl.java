@@ -37,10 +37,10 @@ public class PortalWecomAppServiceImpl extends ServiceImpl<PortalWecomAppMapper,
     @Override
     public PortalWecomApp addApp(Long userId, String agentId, String secret) {
         if (!StringUtils.hasText(agentId) || !StringUtils.hasText(secret)) {
-            throw new PortalException(PortalStatus.BAD_REQUEST, "AgentId and secret are required");
+            throw new PortalException(PortalStatus.BAD_REQUEST, "AgentId 和 Secret 不能为空");
         }
         if (existsApp(userId, agentId)) {
-            throw new PortalException(PortalStatus.CONFLICT, "Agent already exists");
+            throw new PortalException(PortalStatus.CONFLICT, "Agent 已存在");
         }
         PortalCorpConfig corpConfig = corpConfigService.requireByUserId(userId);
         WecomToken token = accessTokenService.fetchToken(corpConfig.getCorpId(), secret);
@@ -71,7 +71,7 @@ public class PortalWecomAppServiceImpl extends ServiceImpl<PortalWecomAppMapper,
     public PortalWecomApp requireByUser(Long userId, Long appId) {
         PortalWecomApp app = getById(appId);
         if (app == null || !app.getUserId().equals(userId)) {
-            throw new PortalException(PortalStatus.NOT_FOUND, "App not found");
+            throw new PortalException(PortalStatus.NOT_FOUND, "应用未找到");
         }
         return app;
     }

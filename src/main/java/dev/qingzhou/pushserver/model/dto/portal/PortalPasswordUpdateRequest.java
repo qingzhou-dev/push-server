@@ -4,10 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 
 public class PortalPasswordUpdateRequest {
 
-    @NotBlank(message = "Old password is required")
+    @NotBlank(message = "旧密码不能为空")
     private String oldPassword;
 
-    @NotBlank(message = "New password is required")
+    @NotBlank(message = "新密码不能为空")
     private String newPassword;
 
     public String getOldPassword() {

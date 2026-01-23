@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
         // 1. 只有服务端自己看日志
         log.error("Unknown error occurred", e);
         // 2. 告诉前端“系统异常”，别告诉他具体哪行代码错了
-        return PushResult.fail("Internal Server Error: " + e.getClass().getSimpleName());
+        return PushResult.fail("系统内部错误: " + e.getClass().getSimpleName());
     }
 
     // 可以专门捕获参数校验异常，返回具体字段错误

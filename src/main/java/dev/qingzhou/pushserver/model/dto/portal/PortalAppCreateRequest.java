@@ -4,10 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 
 public class PortalAppCreateRequest {
 
-    @NotBlank(message = "AgentId is required")
+    @NotBlank(message = "AgentId 不能为空")
     private String agentId;
 
-    @NotBlank(message = "Secret is required")
+    @NotBlank(message = "Secret 不能为空")
     private String secret;
 
     public String getAgentId() {

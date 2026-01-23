@@ -47,7 +47,7 @@ public class OpenApiMessageController {
                     .body(PortalResponse.fail(ex.getMessage()));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(PortalResponse.fail("Internal error"));
+                    .body(PortalResponse.fail("系统内部错误"));
         }
     }
 

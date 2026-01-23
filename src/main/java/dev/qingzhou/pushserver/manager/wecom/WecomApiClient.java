@@ -31,7 +31,7 @@ public class WecomApiClient {
                     .body(WecomToken.class);
             return requireSuccess(response, "gettoken");
         } catch (RestClientException ex) {
-            throw new PortalException(PortalStatus.BAD_GATEWAY, "Failed to call WeCom gettoken", ex);
+            throw new PortalException(PortalStatus.BAD_GATEWAY, "调用企业微信 gettoken 接口失败", ex);
         }
     }
 
@@ -47,7 +47,7 @@ public class WecomApiClient {
                     .body(WecomAgentInfo.class);
             return requireSuccess(response, "agent/get");
         } catch (RestClientException ex) {
-            throw new PortalException(PortalStatus.BAD_GATEWAY, "Failed to call WeCom agent/get", ex);
+            throw new PortalException(PortalStatus.BAD_GATEWAY, "调用企业微信 agent/get 接口失败", ex);
         }
     }
 
@@ -63,11 +63,11 @@ public class WecomApiClient {
                     .retrieve()
                     .body(WecomSendResponse.class);
             if (response == null) {
-                throw new PortalException(PortalStatus.BAD_GATEWAY, "Empty response from WeCom message/send");
+                throw new PortalException(PortalStatus.BAD_GATEWAY, "企业微信 message/send 响应为空");
             }
             return response;
         } catch (RestClientException ex) {
-            throw new PortalException(PortalStatus.BAD_GATEWAY, "Failed to call WeCom message/send", ex);
+            throw new PortalException(PortalStatus.BAD_GATEWAY, "调用企业微信 message/send 接口失败", ex);
         }
     }
 
@@ -76,12 +76,28 @@ public class WecomApiClient {
             String action
     ) {
         if (response == null) {
-            throw new PortalException(PortalStatus.BAD_GATEWAY, "Empty response from WeCom " + action);
+            throw new PortalException(PortalStatus.BAD_GATEWAY, "企业微信 " + action + " 响应为空");
         }
         if (!response.isSuccess()) {
+            if (Integer.valueOf(60020).equals(response.getErrcode())) {
+                String ip = "unknown";
+                String errmsg = response.getErrmsg();
+                if (errmsg != null && errmsg.contains("from ip: ")) {
+                    int start = errmsg.indexOf("from ip: ") + 9;
+                    int end = errmsg.indexOf(",", start);
+                    if (end == -1) {
+                        end = errmsg.length();
+                    }
+                    ip = errmsg.substring(start, end).trim();
+                }
+                throw new PortalException(
+                        PortalStatus.BAD_REQUEST,
+                        "企业微信 IP 白名单校验失败。请在企业微信应用设置的“企业可信 IP”列表中添加本服务器 IP [" + ip + "]。"
+                );
+            }
             throw new PortalException(
                     PortalStatus.BAD_REQUEST,
-                    "WeCom " + action + " failed: " + response.getErrmsg() + " (" + response.getErrcode() + ")"
+                    "企业微信 " + action + " 失败: " + response.getErrmsg() + " (" + response.getErrcode() + ")"
             );
         }
         return response;

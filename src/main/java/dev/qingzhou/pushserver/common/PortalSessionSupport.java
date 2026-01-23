@@ -36,6 +36,6 @@ public final class PortalSessionSupport {
                 return userId;
             }
         }
-        throw new PortalException(PortalStatus.UNAUTHORIZED, "Unauthorized");
+        throw new PortalException(PortalStatus.UNAUTHORIZED, "未授权");
     }
 }

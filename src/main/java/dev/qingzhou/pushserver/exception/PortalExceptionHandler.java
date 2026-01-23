@@ -9,7 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice(basePackages = "dev.qingzhou.pushserver.controller.portal")
+@RestControllerAdvice(basePackages = "dev.qingzhou.pushserver.controller")
 public class PortalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(PortalExceptionHandler.class);
@@ -22,7 +22,7 @@ public class PortalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<PortalResponse<Void>> handleValidation(MethodArgumentNotValidException ex) {
-        String message = "Validation failed";
+        String message = "校验失败";
         if (ex.getBindingResult().getFieldError() != null) {
             message = ex.getBindingResult().getFieldError().getDefaultMessage();
         }
@@ -31,13 +31,13 @@ public class PortalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<PortalResponse<Void>> handleNotReadable(HttpMessageNotReadableException ex) {
-        return ResponseEntity.badRequest().body(PortalResponse.fail("Invalid request payload"));
+        return ResponseEntity.badRequest().body(PortalResponse.fail("请求参数格式错误"));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<PortalResponse<Void>> handleException(Exception ex) {
         log.error("Unhandled portal error", ex);
         return ResponseEntity.internalServerError()
-                .body(PortalResponse.fail("Internal Server Error"));
+                .body(PortalResponse.fail("服务器内部错误"));
     }
 }

@@ -32,7 +32,7 @@ public class PushController {
     ) {
         if (!isAuthorized(apiKey)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(PushResult.fail("Unauthorized"));
+                    .body(PushResult.fail("未授权"));
         }
         try {
             PushResult result = pushService.push(request);

@@ -24,7 +24,7 @@ public class PortalCorpConfigServiceImpl extends ServiceImpl<PortalCorpConfigMap
     public PortalCorpConfig requireByUserId(Long userId) {
         PortalCorpConfig config = getByUserId(userId);
         if (config == null) {
-            throw new PortalException(PortalStatus.BAD_REQUEST, "Corp config is not set");
+            throw new PortalException(PortalStatus.BAD_REQUEST, "企业配置未设置");
         }
         return config;
     }
@@ -32,7 +32,7 @@ public class PortalCorpConfigServiceImpl extends ServiceImpl<PortalCorpConfigMap
     @Override
     public PortalCorpConfig upsert(Long userId, String corpId) {
         if (!StringUtils.hasText(corpId)) {
-            throw new PortalException(PortalStatus.BAD_REQUEST, "CorpId is required");
+            throw new PortalException(PortalStatus.BAD_REQUEST, "CorpId 不能为空");
         }
         PortalCorpConfig config = getByUserId(userId);
         long now = System.currentTimeMillis();

@@ -23,10 +23,10 @@ public class PortalUserServiceImpl extends ServiceImpl<PortalUserMapper, PortalU
     @Override
     public PortalUser register(String account, String password) {
         if (!StringUtils.hasText(account) || !StringUtils.hasText(password)) {
-            throw new PortalException(PortalStatus.BAD_REQUEST, "Account and password are required");
+            throw new PortalException(PortalStatus.BAD_REQUEST, "账号和密码不能为空");
         }
         if (existsAccount(account)) {
-            throw new PortalException(PortalStatus.CONFLICT, "Account already exists");
+            throw new PortalException(PortalStatus.CONFLICT, "账号已存在");
         }
         PortalUser user = new PortalUser();
         user.setAccount(account.trim());
@@ -41,11 +41,11 @@ public class PortalUserServiceImpl extends ServiceImpl<PortalUserMapper, PortalU
     @Override
     public PortalUser authenticate(String account, String password) {
         if (!StringUtils.hasText(account) || !StringUtils.hasText(password)) {
-            throw new PortalException(PortalStatus.BAD_REQUEST, "Account and password are required");
+            throw new PortalException(PortalStatus.BAD_REQUEST, "账号和密码不能为空");
         }
         PortalUser user = findByAccount(account);
         if (user == null || !passwordEncoder.matches(password, user.getPasswordHash())) {
-            throw new PortalException(PortalStatus.UNAUTHORIZED, "Invalid credentials");
+            throw new PortalException(PortalStatus.UNAUTHORIZED, "凭证无效");
         }
         return user;
     }
@@ -63,14 +63,14 @@ public class PortalUserServiceImpl extends ServiceImpl<PortalUserMapper, PortalU
     @Override
     public void updatePassword(Long userId, String oldPassword, String newPassword) {
         if (!StringUtils.hasText(oldPassword) || !StringUtils.hasText(newPassword)) {
-            throw new PortalException(PortalStatus.BAD_REQUEST, "Password fields are required");
+            throw new PortalException(PortalStatus.BAD_REQUEST, "密码字段不能为空");
         }
         PortalUser user = getById(userId);
         if (user == null) {
-            throw new PortalException(PortalStatus.NOT_FOUND, "User not found");
+            throw new PortalException(PortalStatus.NOT_FOUND, "用户未找到");
         }
         if (!passwordEncoder.matches(oldPassword, user.getPasswordHash())) {
-            throw new PortalException(PortalStatus.UNAUTHORIZED, "Old password mismatch");
+            throw new PortalException(PortalStatus.UNAUTHORIZED, "旧密码不匹配");
         }
         user.setPasswordHash(passwordEncoder.encode(newPassword));
         user.setUpdatedAt(System.currentTimeMillis());

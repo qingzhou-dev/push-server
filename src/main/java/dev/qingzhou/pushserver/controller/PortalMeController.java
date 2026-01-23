@@ -31,7 +31,7 @@ public class PortalMeController {
         Long userId = PortalSessionSupport.requireUserId(session);
         PortalUser user = userService.getById(userId);
         if (user == null) {
-            throw new PortalException(PortalStatus.NOT_FOUND, "User not found");
+            throw new PortalException(PortalStatus.NOT_FOUND, "用户未找到");
         }
         return PortalResponse.ok(toResponse(user));
     }
@@ -43,7 +43,7 @@ public class PortalMeController {
     ) {
         Long userId = PortalSessionSupport.requireUserId(session);
         userService.updatePassword(userId, request.getOldPassword(), request.getNewPassword());
-        return PortalResponse.ok("password updated", null);
+        return PortalResponse.ok("密码已更新", null);
     }
 
     private PortalUserResponse toResponse(PortalUser user) {

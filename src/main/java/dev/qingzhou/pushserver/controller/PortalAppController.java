@@ -59,7 +59,7 @@ public class PortalAppController {
         Long userId = PortalSessionSupport.requireUserId(session);
         appService.deleteApp(userId, appId);
         apiKeyService.removeByAppId(appId);
-        return PortalResponse.ok("deleted", null);
+        return PortalResponse.ok("已删除", null);
     }
 
     @PostMapping("/{appId}/sync")
@@ -118,7 +118,7 @@ public class PortalAppController {
         Long userId = PortalSessionSupport.requireUserId(session);
         appService.requireByUser(userId, appId);
         apiKeyService.removeByAppId(appId);
-        return PortalResponse.ok("deleted", null);
+        return PortalResponse.ok("已删除", null);
     }
 
     private PortalAppResponse toResponse(PortalWecomApp app) {

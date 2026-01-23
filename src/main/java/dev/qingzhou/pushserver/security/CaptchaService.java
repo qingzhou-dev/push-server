@@ -27,7 +27,7 @@ public class CaptchaService {
         }
 
         if (!StringUtils.hasText(input)) {
-            throw new BadCredentialsException("Captcha token is required");
+            throw new BadCredentialsException("验证码 Token 不能为空");
         }
 
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
@@ -41,7 +41,7 @@ public class CaptchaService {
                 .body(Map.class);
 
         if (result == null || !Boolean.TRUE.equals(result.get("success"))) {
-            throw new BadCredentialsException("Captcha verification failed");
+            throw new BadCredentialsException("验证码校验失败");
         }
     }
 }

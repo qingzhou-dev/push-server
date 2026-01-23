@@ -71,7 +71,7 @@ public class PortalMessageServiceImpl implements PortalMessageService {
             throw ex;
         } catch (Exception ex) {
             errorMessage = ex.getMessage();
-            throw new PortalException(PortalStatus.BAD_GATEWAY, "Failed to send message", ex);
+            throw new PortalException(PortalStatus.BAD_GATEWAY, "发送消息失败", ex);
         } finally {
             log = buildLog(userId, app, request, requestJson, responseJson, success, errorMessage);
             messageLogService.save(log);
@@ -79,7 +79,7 @@ public class PortalMessageServiceImpl implements PortalMessageService {
         if (!success && response != null) {
             throw new PortalException(
                     PortalStatus.BAD_REQUEST,
-                    "WeCom send failed: " + response.getErrmsg() + " (" + response.getErrcode() + ")"
+                    "企业微信发送失败: " + response.getErrmsg() + " (" + response.getErrcode() + ")"
             );
         }
         return log;
@@ -98,14 +98,14 @@ public class PortalMessageServiceImpl implements PortalMessageService {
         if (!request.isToAll()
                 && !StringUtils.hasText(payload.getTouser())
                 && !StringUtils.hasText(payload.getToparty())) {
-            throw new PortalException(PortalStatus.BAD_REQUEST, "Recipient is required");
+            throw new PortalException(PortalStatus.BAD_REQUEST, "接收者不能为空");
         }
         switch (request.getMsgType()) {
             case TEXT -> payload.setText(buildText(request));
             case MARKDOWN -> payload.setMarkdown(buildMarkdown(request));
             case TEXT_CARD -> payload.setTextcard(buildTextCard(request));
             case NEWS -> payload.setNews(buildNews(request));
-            default -> throw new PortalException(PortalStatus.BAD_REQUEST, "Unsupported message type");
+            default -> throw new PortalException(PortalStatus.BAD_REQUEST, "不支持的消息类型");
         }
         return payload;
     }
@@ -139,12 +139,12 @@ public class PortalMessageServiceImpl implements PortalMessageService {
     private WecomMessagePayload.News buildNews(PortalMessageSendRequest request) {
         List<PortalMessageSendRequest.PortalNewsArticle> items = request.getArticles();
         if (items == null || items.isEmpty()) {
-            throw new PortalException(PortalStatus.BAD_REQUEST, "articles is required");
+            throw new PortalException(PortalStatus.BAD_REQUEST, "articles 不能为空");
         }
         List<WecomMessagePayload.Article> articles = new ArrayList<>(items.size());
         for (PortalMessageSendRequest.PortalNewsArticle item : items) {
             if (item == null) {
-                throw new PortalException(PortalStatus.BAD_REQUEST, "article cannot be null");
+                throw new PortalException(PortalStatus.BAD_REQUEST, "article 不能为空");
             }
             WecomMessagePayload.Article article = new WecomMessagePayload.Article();
             article.setTitle(requireText(item.getTitle(), "articles.title"));
@@ -208,7 +208,7 @@ public class PortalMessageServiceImpl implements PortalMessageService {
 
     private String requireText(String value, String field) {
         if (!StringUtils.hasText(value)) {
-            throw new PortalException(PortalStatus.BAD_REQUEST, field + " is required");
+            throw new PortalException(PortalStatus.BAD_REQUEST, field + " 不能为空");
         }
         return value.trim();
     }
@@ -217,7 +217,7 @@ public class PortalMessageServiceImpl implements PortalMessageService {
         try {
             return Long.parseLong(agentId.trim());
         } catch (Exception ex) {
-            throw new PortalException(PortalStatus.BAD_REQUEST, "Invalid agentId");
+            throw new PortalException(PortalStatus.BAD_REQUEST, "无效的 agentId");
         }
     }
 

@@ -4,10 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 
 public class PortalRegisterRequest {
 
-    @NotBlank(message = "Account is required")
+    @NotBlank(message = "账号不能为空")
     private String account;
 
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "密码不能为空")
     private String password;
 
     public String getAccount() {

@@ -38,14 +38,14 @@ public class PortalJsonLoginAuthenticationFilter extends AbstractAuthenticationP
             @NonNull HttpServletResponse response
     ) throws AuthenticationException {
         if (!isJsonRequest(request)) {
-            throw new AuthenticationServiceException("Unsupported content type");
+            throw new AuthenticationServiceException("不支持的内容类型");
         }
         PortalLoginRequest loginRequest;
         try {
             loginRequest = objectMapper.readValue(request.getInputStream(), PortalLoginRequest.class);
         } catch (IOException ex) {
             ex.printStackTrace();
-            throw new AuthenticationServiceException("Invalid login payload", ex);
+            throw new AuthenticationServiceException("无效的登录参数", ex);
         }
 
         String account = loginRequest.getAccount();
@@ -53,7 +53,7 @@ public class PortalJsonLoginAuthenticationFilter extends AbstractAuthenticationP
         String captcha = loginRequest.getCaptcha();
 
         if (!StringUtils.hasText(account) || !StringUtils.hasText(password)) {
-            throw new AuthenticationServiceException("Account and password are required");
+            throw new AuthenticationServiceException("账号和密码不能为空");
         }
 
         captchaService.validate(captcha);

@@ -9,7 +9,7 @@ public class PortalResponse<T> {
     public static <T> PortalResponse<T> ok(T data) {
         PortalResponse<T> response = new PortalResponse<>();
         response.success = true;
-        response.message = "ok";
+        response.message = "成功";
         response.data = data;
         return response;
     }

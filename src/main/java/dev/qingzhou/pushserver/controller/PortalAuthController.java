@@ -42,7 +42,7 @@ public class PortalAuthController {
         if (session != null) {
             session.invalidate();
         }
-        return PortalResponse.ok("logged out", null);
+        return PortalResponse.ok("已退出登录", null);
     }
 
     private PortalUserResponse toResponse(PortalUser user) {
