@@ -44,7 +44,7 @@ public class DashboardServiceImpl implements DashboardService {
 
         long todayTotal = countLogs(userId, startOfDay, null);
         long todaySuccess = countLogs(userId, startOfDay, 1);
-        double successRate = todayTotal == 0 ? 0.0 : todaySuccess * 100.0 / todayTotal;
+        double successRate = todayTotal == 0 ? 100.0 : todaySuccess * 100.0 / todayTotal;
 
         long activeApps = appService.count(new QueryWrapper<PortalWecomApp>()
                 .eq("user_id", userId));
