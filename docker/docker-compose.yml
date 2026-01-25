@@ -5,5 +5,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./application-prod.yml:/app/config/application-prod.yml:ro
+      - push-server-data:/app/data
     restart: unless-stopped
+
+volumes:
+  push-server-data:
