@@ -79,10 +79,10 @@ flowchart LR
 docker run -d \
   --name push-server \
   -p 8000:8000 \
-  -v push-server-data:/app/data \
+  -v $(pwd)/data:/app/data \
   qingzhoudev/push-server:latest
 ```
-* **数据持久化**: 使用 Docker 命名卷 `push-server-data` 存储数据。这种方式由 Docker 自动管理权限，无需手动处理文件所有者问题。
+* **数据持久化**: `-v $(pwd)/data:/app/data` 会将应用数据（包括 SQLite 数据库）保存到当前目录下的 `data` 文件夹中。
 * **首次运行**: 启动后，访问 `http://localhost:8000`，系统会自动跳转至**初始化页面**。请根据引导完成管理员账号注册和企业微信配置。
 
 ### Docker Compose
@@ -97,11 +97,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - push-server-data:/app/data
+      - ./data:/app/data
     restart: unless-stopped
-
-volumes:
-  push-server-data:
 ```
 
 启动命令：

@@ -5,8 +5,5 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - push-server-data:/app/data
+      - ./data:/app/data
     restart: unless-stopped
-
-volumes:
-  push-server-data:
