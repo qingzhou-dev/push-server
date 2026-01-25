@@ -31,12 +31,41 @@ flowchart LR
 * **轻量级 & 高性能**：基于 Spring Boot 4 + GraalVM Native Image，极致的启动速度和资源占用。
 * **Web 管理后台**：内置 Web UI，支持在线完成所有配置（企业微信、应用、API Key），查看推送日志和统计报表。
 * **多应用隔离**：支持管理多个企业微信应用，每个应用拥有独立 API Key 和限流策略。
-* **开箱即用**：无需外部数据库，无需复杂配置，首次运行后通过 Web 页面即可完成初始化。
-* **标准化 API (V2)**：提供 RESTful API，支持更细粒度的推送控制。
-* **兼容旧版 (V1)**：保留旧版 API 以实现平滑迁移。
-* **容器友好**：提供 Docker 镜像，支持环境变量配置，完美适配 K8s。
-* **扩展性强**：V1 基于 `push-core` SPI 架构；V2 采用原生独立实现，针对 GraalVM 深度优化。
-* **安全可靠**：支持 API Key 级别的速率限制 (Rate Limit)。
+* **内嵌数据库**：默认使用 SQLite 数据库，无需安装额外的数据库服务。
+* **开箱即用**：无需复杂配置，首次运行后通过 Web 页面即可完成初始化。
+
+---
+
+## 🛠️ 技术栈
+
+* **后端**: Spring Boot 4, Java 25, MyBatis Plus
+* **前端**: Vue 3, Element Plus
+* **数据库**: SQLite (内嵌)
+* **运行时**: GraalVM (支持 Native Image 编译)
+
+---
+
+## 📸 界面预览
+
+| 系统初始化 | 系统登录 |
+| :---: | :---: |
+| <img src="docs/images/init.png" width="100%"> | <img src="docs/images/login.png" width="100%"> |
+
+| 仪表盘 | 应用管理 |
+| :---: | :---: |
+| <img src="docs/images/dashboard.png" width="100%"> | <img src="docs/images/apps.png" width="100%"> |
+
+| 在线调试 | 推送日志 |
+| :---: | :---: |
+| <img src="docs/images/messages.png" width="100%"> | <img src="docs/images/logs.png" width="100%"> |
+
+| 密钥管理 | 系统设置 |
+| :---: | :---: |
+| <img src="docs/images/keys.png" width="100%"> | <img src="docs/images/serrings.png" width="100%"> |
+
+| 用户管理 | |
+| :---: | :---: |
+| <img src="docs/images/user.png" width="100%"> | |
 
 ---
 
@@ -52,7 +81,16 @@ docker run -d \
   qingzhoudev/push-server:latest
 ```
 * **数据持久化**: `-v $(pwd)/data:/app/data` 会将应用数据（包括 SQLite 数据库）保存到当前目录下的 `data` 文件夹中。
-* **首次运行**: 启动后，访问 `http://localhost:8000`，根据页面引导完成管理员账号和企业微信的初始化配置。
+* **首次运行**: 启动后，访问 `http://localhost:8000`，系统会自动跳转至**初始化页面**。请根据引导完成管理员账号注册和企业微信配置。
+
+---
+
+## 🛡️ 安全配置
+
+为了提高系统安全性，建议在**系统设置**中开启 **Cloudflare Turnstile** 验证。
+
+* **风险**: 未开启验证可能导致登录接口面临暴力破解或恶意攻击风险。
+* **配置**: 开启验证需前往 [Cloudflare](https://www.cloudflare.com/products/turnstile/) 获取 Site Key 和 Secret Key，并在系统设置中填入。
 
 ---
 
