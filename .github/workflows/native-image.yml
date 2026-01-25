@@ -47,6 +47,26 @@ jobs:
             echo "MVN_CMD=mvn" >> "$GITHUB_ENV"
           fi
 
+      - name: Checkout Frontend
+        uses: actions/checkout@v4
+        with:
+          repository: qingzhou-dev/push-server-web
+          path: push-server-web
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Frontend
+        shell: bash
+        run: |
+          cd push-server-web
+          npm install
+          npm run build
+          cd ..
+          cp -r push-server-web/dist/* src/main/resources/static/
+
       - name: Run tests
         shell: bash
         run: ${{ env.MVN_CMD }} -B test
@@ -95,6 +115,26 @@ jobs:
           else
             echo "MVN_CMD=mvn" >> "$GITHUB_ENV"
           fi
+
+      - name: Checkout Frontend
+        uses: actions/checkout@v4
+        with:
+          repository: qingzhou-dev/push-server-web
+          path: push-server-web
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Frontend
+        shell: bash
+        run: |
+          cd push-server-web
+          npm install
+          npm run build
+          cd ..
+          cp -r push-server-web/dist/* src/main/resources/static/
 
       - name: Build native image
         shell: bash
