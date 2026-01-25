@@ -65,6 +65,7 @@ jobs:
           npm install
           npm run build
           cd ..
+          mkdir -p src/main/resources/static
           cp -r push-server-web/dist/* src/main/resources/static/
 
       - name: Run tests
@@ -134,6 +135,7 @@ jobs:
           npm install
           npm run build
           cd ..
+          mkdir -p src/main/resources/static
           cp -r push-server-web/dist/* src/main/resources/static/
 
       - name: Build native image
