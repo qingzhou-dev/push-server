@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.qingzhou</groupId>
     <artifactId>push-server</artifactId>
-    <version>0.0.2</version>
+    <version>0.1.0</version>
     <name>push-server</name>
     <description>push-server</description>
     <url/>
@@ -45,6 +45,28 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot4-starter</artifactId>
+            <version>3.5.15</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.46.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
         <dependency>
@@ -82,17 +104,38 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>application.yml</include>
+                    <include>application.properties</include>
+                    <include>**/*.json</include>
+                    <include>**/*.xml</include>
                 </includes>
             </resource>
+
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
-                <excludes>
-                    <exclude>application.yml</exclude>
-                </excludes>
+                <includes>
+                    <include>static/**</include>
+                    <include>templates/**</include>
+                </includes>
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <parameters>true</parameters> <annotationProcessorPaths>
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                    </path>
+                    <path>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-configuration-processor</artifactId>
+                    </path>
+                </annotationProcessorPaths>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -111,8 +154,15 @@
                     <mainClass>dev.qingzhou.pushserver.PushServerApplication</mainClass>
                     <fallback>false</fallback>
                         <buildArgs>
-                        <buildArg>-Djava.specification.version=25</buildArg>
-                        <buildArg>-march=compatibility</buildArg>
+                            <buildArg>-Djava.specification.version=25</buildArg>
+                            <buildArg>-march=compatibility</buildArg>
+                            <buildArg>--initialize-at-build-time=org.sqlite.util.ProcessRunner</buildArg>
+                            <buildArg>--initialize-at-build-time=org.sqlite.util.OSInfo</buildArg>
+                            <buildArg>--initialize-at-run-time=org.apache.ibatis</buildArg>
+
+                            <buildArg>--initialize-at-run-time=org.mybatis</buildArg>
+                            <buildArg>--initialize-at-run-time=org.apache.ibatis.logging</buildArg>
+                            <buildArg>--initialize-at-run-time=org.apache.ibatis.logging.LogFactory</buildArg>
                         </buildArgs>
                 </configuration>
             </plugin>
