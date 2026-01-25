@@ -47,25 +47,27 @@ flowchart LR
 
 ## 📸 界面预览
 
+<p align="center">
+  <img src="docs/images/dashboard.png" alt="仪表盘" width="100%">
+  <br>
+  <em>仪表盘统计</em>
+</p>
+
 | 系统初始化 | 系统登录 |
 | :---: | :---: |
 | <img src="docs/images/init.png" width="100%"> | <img src="docs/images/login.png" width="100%"> |
 
-| 仪表盘 | 应用管理 |
+| 应用管理 | 在线调试 |
 | :---: | :---: |
-| <img src="docs/images/dashboard.png" width="100%"> | <img src="docs/images/apps.png" width="100%"> |
+| <img src="docs/images/apps.png" width="100%"> | <img src="docs/images/messages.png" width="100%"> |
 
-| 在线调试 | 推送日志 |
+| 推送日志 | 密钥管理 |
 | :---: | :---: |
-| <img src="docs/images/messages.png" width="100%"> | <img src="docs/images/logs.png" width="100%"> |
+| <img src="docs/images/logs.png" width="100%"> | <img src="docs/images/keys.png" width="100%"> |
 
-| 密钥管理 | 系统设置 |
+| 系统设置 | 用户管理 |
 | :---: | :---: |
-| <img src="docs/images/keys.png" width="100%"> | <img src="docs/images/serrings.png" width="100%"> |
-
-| 用户管理 | |
-| :---: | :---: |
-| <img src="docs/images/user.png" width="100%"> | |
+| <img src="docs/images/serrings.png" width="100%"> | <img src="docs/images/user.png" width="100%"> |
 
 ---
 
