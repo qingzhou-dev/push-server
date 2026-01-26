@@ -131,9 +131,6 @@
       ]
     },
     {
-      "type": "com.baomidou.mybatisplus.core.conditions.AbstractLambdaWrapper"
-    },
-    {
       "type": "com.baomidou.mybatisplus.core.conditions.AbstractWrapper",
       "methods": [
         {
@@ -187,15 +184,6 @@
       "type": "com.baomidou.mybatisplus.core.conditions.interfaces.Nested"
     },
     {
-      "type": "com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper",
-      "methods": [
-        {
-          "name": "getSqlSelect",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
       "type": "com.baomidou.mybatisplus.core.conditions.query.Query"
     },
     {
@@ -242,6 +230,9 @@
       ]
     },
     {
+      "type": "com.baomidou.mybatisplus.core.toolkit.Wrappers$EmptyWrapper"
+    },
+    {
       "type": "com.baomidou.mybatisplus.extension.ddl.IDdl"
     },
     {
@@ -275,6 +266,10 @@
       "methods": [
         {
           "name": "count",
+          "parameterTypes": []
+        },
+        {
+          "name": "count",
           "parameterTypes": [
             "com.baomidou.mybatisplus.core.conditions.Wrapper"
           ]
@@ -284,10 +279,6 @@
           "parameterTypes": [
             "java.io.Serializable"
           ]
-        },
-        {
-          "name": "lambdaQuery",
-          "parameterTypes": []
         },
         {
           "name": "list",
@@ -627,17 +618,6 @@
     },
     {
       "type": "dev.qingzhou.pushserver.config.MyBatisNativeConfiguration$MyBatisMapperFactoryBeanPostProcessor"
-    },
-    {
-      "type": "dev.qingzhou.pushserver.config.PortalAdminInitializer",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "dev.qingzhou.pushserver.service.PortalUserService"
-          ]
-        }
-      ]
     },
     {
       "type": "dev.qingzhou.pushserver.config.PortalDataSourceProperties",
@@ -980,14 +960,25 @@
         {
           "name": "<init>",
           "parameterTypes": [
-            "dev.qingzhou.pushserver.security.CaptchaService"
+            "dev.qingzhou.pushserver.service.SystemConfigService"
           ]
         },
         {
           "name": "captcha",
-          "parameterTypes": [
-            "jakarta.servlet.http.HttpSession"
-          ]
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.controller.CaptchaController$CaptchaResponse",
+      "methods": [
+        {
+          "name": "enabled",
+          "parameterTypes": []
+        },
+        {
+          "name": "siteKey",
+          "parameterTypes": []
         }
       ]
     },
@@ -1045,6 +1036,20 @@
           ]
         },
         {
+          "name": "create",
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.model.dto.portal.PortalAppCreateRequest",
+            "jakarta.servlet.http.HttpSession"
+          ]
+        },
+        {
+          "name": "createApiKey",
+          "parameterTypes": [
+            "java.lang.Long",
+            "jakarta.servlet.http.HttpSession"
+          ]
+        },
+        {
           "name": "getApiKey",
           "parameterTypes": [
             "java.lang.Long",
@@ -1054,14 +1059,6 @@
         {
           "name": "list",
           "parameterTypes": [
-            "jakarta.servlet.http.HttpSession"
-          ]
-        },
-        {
-          "name": "updateApiKey",
-          "parameterTypes": [
-            "java.lang.Long",
-            "dev.qingzhou.pushserver.model.dto.portal.PortalAppApiKeyUpdateRequest",
             "jakarta.servlet.http.HttpSession"
           ]
         }
@@ -1097,6 +1094,44 @@
           "name": "getCorp",
           "parameterTypes": [
             "jakarta.servlet.http.HttpSession"
+          ]
+        },
+        {
+          "name": "upsert",
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.model.dto.portal.PortalCorpConfigRequest",
+            "jakarta.servlet.http.HttpSession"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.controller.PortalErrorController",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.controller.PortalInitController",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.service.PortalUserService",
+            "dev.qingzhou.pushserver.service.SystemConfigService"
+          ]
+        },
+        {
+          "name": "getInitStatus",
+          "parameterTypes": []
+        },
+        {
+          "name": "initialize",
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.model.dto.portal.PortalInitRequest"
           ]
         }
       ]
@@ -1138,6 +1173,13 @@
             "java.lang.Long",
             "jakarta.servlet.http.HttpSession"
           ]
+        },
+        {
+          "name": "send",
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.model.dto.portal.PortalMessageSendRequest",
+            "jakarta.servlet.http.HttpSession"
+          ]
         }
       ]
     },
@@ -1162,13 +1204,6 @@
             "dev.qingzhou.pushserver.service.PortalAppApiKeyService",
             "dev.qingzhou.pushserver.service.PortalMessageService"
           ]
-        },
-        {
-          "name": "send",
-          "parameterTypes": [
-            "java.lang.String",
-            "dev.qingzhou.pushserver.model.dto.openapi.OpenApiMessageSendRequest"
-          ]
         }
       ]
     },
@@ -1187,6 +1222,33 @@
         {
           "name": "<init>",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.manager.wecom.WecomAgentInfo",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "setAvatarUrl",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setDescription",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setName",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         }
       ]
     },
@@ -1332,43 +1394,22 @@
       "type": "dev.qingzhou.pushserver.mapper.portal.PortalMessageLogMapper"
     },
     {
+      "type": "dev.qingzhou.pushserver.mapper.portal.PortalSystemConfigMapper"
+    },
+    {
       "type": "dev.qingzhou.pushserver.mapper.portal.PortalUserMapper"
     },
     {
       "type": "dev.qingzhou.pushserver.mapper.portal.PortalWecomAppMapper"
     },
     {
-      "type": "dev.qingzhou.pushserver.model.dto.openapi.OpenApiMessageSendRequest",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        },
-        {
-          "name": "setContent",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setMsgType",
-          "parameterTypes": [
-            "dev.qingzhou.pushserver.model.dto.portal.PortalMessageType"
-          ]
-        },
-        {
-          "name": "setToUser",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "dev.qingzhou.pushserver.model.dto.portal.PortalAppApiKeyUpdateRequest",
+      "type": "dev.qingzhou.pushserver.model.dto.portal.PortalAppCreateRequest",
       "fields": [
         {
-          "name": "rateLimitPerMinute"
+          "name": "agentId"
+        },
+        {
+          "name": "secret"
         }
       ],
       "methods": [
@@ -1377,9 +1418,70 @@
           "parameterTypes": []
         },
         {
-          "name": "setRateLimitPerMinute",
+          "name": "setAgentId",
           "parameterTypes": [
-            "java.lang.Integer"
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setSecret",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.model.dto.portal.PortalCorpConfigRequest",
+      "fields": [
+        {
+          "name": "corpId"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "setCorpId",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.model.dto.portal.PortalInitRequest",
+      "fields": [
+        {
+          "name": "password"
+        },
+        {
+          "name": "username"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "setPassword",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setTurnstileEnabled",
+          "parameterTypes": [
+            "boolean"
+          ]
+        },
+        {
+          "name": "setUsername",
+          "parameterTypes": [
+            "java.lang.String"
           ]
         }
       ]
@@ -1407,6 +1509,44 @@
           "name": "setPassword",
           "parameterTypes": [
             "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.model.dto.portal.PortalMessageSendRequest",
+      "fields": [
+        {
+          "name": "appId"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "setAppId",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "setContent",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setMsgType",
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.model.dto.portal.PortalMessageType"
+          ]
+        },
+        {
+          "name": "setToAll",
+          "parameterTypes": [
+            "java.lang.Boolean"
           ]
         }
       ]
@@ -1504,6 +1644,26 @@
           "parameterTypes": []
         },
         {
+          "name": "getCorpId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCreatedAt",
+          "parameterTypes": []
+        },
+        {
+          "name": "getId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUpdatedAt",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUserId",
+          "parameterTypes": []
+        },
+        {
           "name": "setCorpId",
           "parameterTypes": [
             "java.lang.String"
@@ -1538,10 +1698,6 @@
     {
       "type": "dev.qingzhou.pushserver.model.entity.portal.PortalMessageLog",
       "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        },
         {
           "name": "getAgentId",
           "parameterTypes": []
@@ -1611,37 +1767,44 @@
           "parameterTypes": []
         },
         {
-          "name": "setAgentId",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setAppId",
+          "name": "setId",
           "parameterTypes": [
             "java.lang.Long"
           ]
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.model.entity.portal.PortalSystemConfig",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
         },
         {
-          "name": "setContent",
+          "name": "getConfigKey",
+          "parameterTypes": []
+        },
+        {
+          "name": "getConfigValue",
+          "parameterTypes": []
+        },
+        {
+          "name": "getId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUpdatedAt",
+          "parameterTypes": []
+        },
+        {
+          "name": "setConfigKey",
           "parameterTypes": [
             "java.lang.String"
           ]
         },
         {
-          "name": "setCreatedAt",
-          "parameterTypes": [
-            "java.lang.Long"
-          ]
-        },
-        {
-          "name": "setDescription",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setErrorMessage",
+          "name": "setConfigValue",
           "parameterTypes": [
             "java.lang.String"
           ]
@@ -1653,61 +1816,7 @@
           ]
         },
         {
-          "name": "setMsgType",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setRequestJson",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setResponseJson",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setSuccess",
-          "parameterTypes": [
-            "java.lang.Integer"
-          ]
-        },
-        {
-          "name": "setTitle",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setToAll",
-          "parameterTypes": [
-            "java.lang.Integer"
-          ]
-        },
-        {
-          "name": "setToParty",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setToUser",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setUrl",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setUserId",
+          "name": "setUpdatedAt",
           "parameterTypes": [
             "java.lang.Long"
           ]
@@ -1781,6 +1890,42 @@
           "parameterTypes": []
         },
         {
+          "name": "getAgentId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getAvatarUrl",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCreatedAt",
+          "parameterTypes": []
+        },
+        {
+          "name": "getDescription",
+          "parameterTypes": []
+        },
+        {
+          "name": "getId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getName",
+          "parameterTypes": []
+        },
+        {
+          "name": "getSecret",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUpdatedAt",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUserId",
+          "parameterTypes": []
+        },
+        {
           "name": "setAgentId",
           "parameterTypes": [
             "java.lang.String"
@@ -1850,19 +1995,6 @@
       ]
     },
     {
-      "type": "dev.qingzhou.pushserver.model.vo.portal.DashboardChartsResponse$DistributionSlice",
-      "methods": [
-        {
-          "name": "getName",
-          "parameterTypes": []
-        },
-        {
-          "name": "getValue",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
       "type": "dev.qingzhou.pushserver.model.vo.portal.DashboardChartsResponse$TrendPoint",
       "methods": [
         {
@@ -1871,31 +2003,6 @@
         },
         {
           "name": "getDate",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "dev.qingzhou.pushserver.model.vo.portal.DashboardLogResponse",
-      "methods": [
-        {
-          "name": "getAppName",
-          "parameterTypes": []
-        },
-        {
-          "name": "getErrorMsg",
-          "parameterTypes": []
-        },
-        {
-          "name": "getReceiver",
-          "parameterTypes": []
-        },
-        {
-          "name": "getStatus",
-          "parameterTypes": []
-        },
-        {
-          "name": "getTime",
           "parameterTypes": []
         }
       ]
@@ -2100,7 +2207,9 @@
       "methods": [
         {
           "name": "<init>",
-          "parameterTypes": []
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.service.SystemConfigService"
+          ]
         }
       ]
     },
@@ -2155,6 +2264,9 @@
       "type": "dev.qingzhou.pushserver.service.PushService"
     },
     {
+      "type": "dev.qingzhou.pushserver.service.SystemConfigService"
+    },
+    {
       "type": "dev.qingzhou.pushserver.service.impl.DashboardServiceImpl",
       "methods": [
         {
@@ -2195,17 +2307,10 @@
           ]
         },
         {
-          "name": "requireAppByApiKey",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "updateRateLimit",
+          "name": "rotateKey",
           "parameterTypes": [
             "java.lang.Long",
-            "java.lang.Long",
-            "java.lang.Integer"
+            "java.lang.Long"
           ]
         }
       ]
@@ -2238,6 +2343,13 @@
           "name": "requireByUserId",
           "parameterTypes": [
             "java.lang.Long"
+          ]
+        },
+        {
+          "name": "upsert",
+          "parameterTypes": [
+            "java.lang.Long",
+            "java.lang.String"
           ]
         }
       ]
@@ -2346,6 +2458,14 @@
           ]
         },
         {
+          "name": "addApp",
+          "parameterTypes": [
+            "java.lang.Long",
+            "java.lang.String",
+            "java.lang.String"
+          ]
+        },
+        {
           "name": "listByUser",
           "parameterTypes": [
             "java.lang.Long"
@@ -2379,6 +2499,44 @@
           "parameterTypes": [
             "dev.qingzhou.pushserver.config.PushProperties"
           ]
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.service.impl.SystemConfigServiceImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.mapper.portal.PortalSystemConfigMapper"
+          ]
+        },
+        {
+          "name": "getTurnstileSiteKey",
+          "parameterTypes": []
+        },
+        {
+          "name": "isTurnstileEnabled",
+          "parameterTypes": []
+        },
+        {
+          "name": "setTurnstileConfig",
+          "parameterTypes": [
+            "boolean",
+            "java.lang.String",
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.service.impl.SystemConfigServiceImpl$$SpringCGLIB$$0",
+      "fields": [
+        {
+          "name": "CGLIB$CALLBACK_FILTER"
+        },
+        {
+          "name": "CGLIB$FACTORY_DATA"
         }
       ]
     },
@@ -2515,7 +2673,7 @@
       "type": "jakarta.validation.bootstrap.GenericBootstrap"
     },
     {
-      "type": "jakarta.validation.constraints.Min",
+      "type": "jakarta.validation.constraints.NotBlank",
       "methods": [
         {
           "name": "groups",
@@ -2528,9 +2686,22 @@
         {
           "name": "payload",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "jakarta.validation.constraints.NotNull",
+      "methods": [
+        {
+          "name": "groups",
+          "parameterTypes": []
         },
         {
-          "name": "value",
+          "name": "message",
+          "parameterTypes": []
+        },
+        {
+          "name": "payload",
           "parameterTypes": []
         }
       ]
@@ -2543,421 +2714,6 @@
     },
     {
       "type": "jakarta.xml.ws.WebServiceRef"
-    },
-    {
-      "type": "java.awt.AlphaComposite",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "extraAlpha"
-        },
-        {
-          "name": "rule"
-        }
-      ]
-    },
-    {
-      "type": "java.awt.Color",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "getRGB",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "java.awt.Component",
-      "jniAccessible": true
-    },
-    {
-      "type": "java.awt.Font",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "name"
-        },
-        {
-          "name": "pData"
-        },
-        {
-          "name": "size"
-        },
-        {
-          "name": "style"
-        }
-      ],
-      "methods": [
-        {
-          "name": "getFont",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "getFontPeer",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "java.awt.Insets",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "int",
-            "int",
-            "int",
-            "int"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "java.awt.Toolkit",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "getDefaultToolkit",
-          "parameterTypes": []
-        },
-        {
-          "name": "getFontMetrics",
-          "parameterTypes": [
-            "java.awt.Font"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "java.awt.desktop.UserSessionEvent$Reason",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "CONSOLE"
-        },
-        {
-          "name": "LOCK"
-        },
-        {
-          "name": "REMOTE"
-        },
-        {
-          "name": "UNSPECIFIED"
-        }
-      ]
-    },
-    {
-      "type": "java.awt.geom.AffineTransform",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "m00"
-        },
-        {
-          "name": "m01"
-        },
-        {
-          "name": "m02"
-        },
-        {
-          "name": "m10"
-        },
-        {
-          "name": "m11"
-        },
-        {
-          "name": "m12"
-        }
-      ]
-    },
-    {
-      "type": "java.awt.geom.GeneralPath",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "int",
-            "byte[]",
-            "int",
-            "float[]",
-            "int"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "java.awt.geom.Path2D",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "numTypes"
-        },
-        {
-          "name": "pointTypes"
-        },
-        {
-          "name": "windingRule"
-        }
-      ]
-    },
-    {
-      "type": "java.awt.geom.Path2D$Float",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "floatCoords"
-        }
-      ]
-    },
-    {
-      "type": "java.awt.geom.Point2D$Float",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "x"
-        },
-        {
-          "name": "y"
-        }
-      ],
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "float",
-            "float"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "java.awt.geom.Rectangle2D$Float",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "height"
-        },
-        {
-          "name": "width"
-        },
-        {
-          "name": "x"
-        },
-        {
-          "name": "y"
-        }
-      ],
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "float",
-            "float",
-            "float",
-            "float"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "java.awt.image.BufferedImage",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "colorModel"
-        },
-        {
-          "name": "imageType"
-        },
-        {
-          "name": "raster"
-        }
-      ],
-      "methods": [
-        {
-          "name": "getRGB",
-          "parameterTypes": [
-            "int",
-            "int",
-            "int",
-            "int",
-            "int[]",
-            "int",
-            "int"
-          ]
-        },
-        {
-          "name": "setRGB",
-          "parameterTypes": [
-            "int",
-            "int",
-            "int",
-            "int",
-            "int[]",
-            "int",
-            "int"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "java.awt.image.ColorModel",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "colorSpace"
-        },
-        {
-          "name": "colorSpaceType"
-        },
-        {
-          "name": "isAlphaPremultiplied"
-        },
-        {
-          "name": "is_sRGB"
-        },
-        {
-          "name": "nBits"
-        },
-        {
-          "name": "numComponents"
-        },
-        {
-          "name": "supportsAlpha"
-        },
-        {
-          "name": "transparency"
-        }
-      ],
-      "methods": [
-        {
-          "name": "getRGBdefault",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "java.awt.image.IndexColorModel",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "allgrayopaque"
-        },
-        {
-          "name": "colorData"
-        },
-        {
-          "name": "map_size"
-        },
-        {
-          "name": "rgb"
-        },
-        {
-          "name": "transparent_index"
-        }
-      ]
-    },
-    {
-      "type": "java.awt.image.Raster",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "dataBuffer"
-        },
-        {
-          "name": "height"
-        },
-        {
-          "name": "minX"
-        },
-        {
-          "name": "minY"
-        },
-        {
-          "name": "numBands"
-        },
-        {
-          "name": "numDataElements"
-        },
-        {
-          "name": "sampleModel"
-        },
-        {
-          "name": "sampleModelTranslateX"
-        },
-        {
-          "name": "sampleModelTranslateY"
-        },
-        {
-          "name": "width"
-        }
-      ]
-    },
-    {
-      "type": "java.awt.image.SampleModel",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "height"
-        },
-        {
-          "name": "width"
-        }
-      ],
-      "methods": [
-        {
-          "name": "getPixels",
-          "parameterTypes": [
-            "int",
-            "int",
-            "int",
-            "int",
-            "int[]",
-            "java.awt.image.DataBuffer"
-          ]
-        },
-        {
-          "name": "setPixels",
-          "parameterTypes": [
-            "int",
-            "int",
-            "int",
-            "int",
-            "int[]",
-            "java.awt.image.DataBuffer"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "java.awt.image.SinglePixelPackedSampleModel",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "bitMasks"
-        },
-        {
-          "name": "bitOffsets"
-        },
-        {
-          "name": "bitSizes"
-        },
-        {
-          "name": "maxBitSize"
-        }
-      ]
     },
     {
       "type": "java.beans.Introspector"
@@ -3056,6 +2812,9 @@
       "type": "java.lang.Object[]"
     },
     {
+      "type": "java.lang.Record"
+    },
+    {
       "type": "java.lang.RuntimeException"
     },
     {
@@ -3142,9 +2901,6 @@
     },
     {
       "type": "java.lang.reflect.InvocationHandler"
-    },
-    {
-      "type": "java.lang.reflect.Method"
     },
     {
       "type": "java.lang.reflect.ParameterizedType",
@@ -3299,12 +3055,6 @@
       "type": "javafx.beans.value.ObservableValue"
     },
     {
-      "type": "javax.imageio.spi.ImageReaderSpi"
-    },
-    {
-      "type": "javax.imageio.spi.ImageWriterSpi"
-    },
-    {
       "type": "javax.money.MonetaryAmount"
     },
     {
@@ -3336,9 +3086,6 @@
     },
     {
       "type": "jdk.internal.misc.Unsafe"
-    },
-    {
-      "type": "jdk.internal.reflect.DirectMethodHandleAccessor"
     },
     {
       "type": "kotlin.Metadata"
@@ -3374,28 +3121,7 @@
       "type": "org.aopalliance.intercept.MethodInterceptor"
     },
     {
-      "type": "org.apache.catalina.authenticator.AuthenticatorBase"
-    },
-    {
-      "type": "org.apache.catalina.connector.CoyoteAdapter"
-    },
-    {
       "type": "org.apache.catalina.core.ApplicationContextFacade"
-    },
-    {
-      "type": "org.apache.catalina.core.ApplicationFilterChain"
-    },
-    {
-      "type": "org.apache.catalina.core.StandardContextValve"
-    },
-    {
-      "type": "org.apache.catalina.core.StandardEngineValve"
-    },
-    {
-      "type": "org.apache.catalina.core.StandardHostValve"
-    },
-    {
-      "type": "org.apache.catalina.core.StandardWrapperValve"
     },
     {
       "type": "org.apache.catalina.loader.JdbcLeakPrevention",
@@ -3423,9 +3149,6 @@
       ]
     },
     {
-      "type": "org.apache.catalina.valves.ErrorReportValve"
-    },
-    {
       "type": "org.apache.commons.dbcp2.BasicDataSource"
     },
     {
@@ -3448,9 +3171,6 @@
           "parameterTypes": []
         }
       ]
-    },
-    {
-      "type": "org.apache.coyote.AbstractProcessorLight"
     },
     {
       "type": "org.apache.coyote.AbstractProtocol",
@@ -3485,9 +3205,6 @@
       ]
     },
     {
-      "type": "org.apache.coyote.AbstractProtocol$ConnectionHandler"
-    },
-    {
       "type": "org.apache.coyote.UpgradeProtocol"
     },
     {
@@ -3501,9 +3218,6 @@
     },
     {
       "type": "org.apache.coyote.http11.Http11NioProtocol"
-    },
-    {
-      "type": "org.apache.coyote.http11.Http11Processor"
     },
     {
       "type": "org.apache.derby.jdbc.EmbeddedDriver"
@@ -3657,13 +3371,6 @@
             "java.lang.String",
             "java.lang.Object"
           ]
-        },
-        {
-          "name": "update",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.Object"
-          ]
         }
       ]
     },
@@ -3709,21 +3416,6 @@
       "type": "org.apache.tomcat.util.net.NioEndpoint"
     },
     {
-      "type": "org.apache.tomcat.util.net.NioEndpoint$SocketProcessor"
-    },
-    {
-      "type": "org.apache.tomcat.util.net.SocketProcessorBase"
-    },
-    {
-      "type": "org.apache.tomcat.util.threads.TaskThread$WrappingRunnable"
-    },
-    {
-      "type": "org.apache.tomcat.util.threads.ThreadPoolExecutor"
-    },
-    {
-      "type": "org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker"
-    },
-    {
       "type": "org.apache.tomcat.websocket.server.WsFilter"
     },
     {
@@ -3760,10 +3452,16 @@
       "type": "org.hibernate.validator.HibernateValidator"
     },
     {
-      "type": "org.hibernate.validator.internal.constraintvalidators.bv.number.bound.AbstractMinValidator"
+      "type": "org.hibernate.validator.internal.constraintvalidators.bv.NotBlankValidator",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
     },
     {
-      "type": "org.hibernate.validator.internal.constraintvalidators.bv.number.bound.MinValidatorForInteger",
+      "type": "org.hibernate.validator.internal.constraintvalidators.bv.NotNullValidator",
       "methods": [
         {
           "name": "<init>",
@@ -4018,9 +3716,6 @@
       "type": "org.springframework.aop.support.AbstractPointcutAdvisor"
     },
     {
-      "type": "org.springframework.aot.generate.Generated"
-    },
-    {
       "type": "org.springframework.aot.hint.annotation.Reflective"
     },
     {
@@ -4104,9 +3799,6 @@
       ]
     },
     {
-      "type": "org.springframework.boot.ApplicationRunner"
-    },
-    {
       "type": "org.springframework.boot.ClearCachesApplicationListener",
       "methods": [
         {
@@ -4114,9 +3806,6 @@
           "parameterTypes": []
         }
       ]
-    },
-    {
-      "type": "org.springframework.boot.Runner"
     },
     {
       "type": "org.springframework.boot.SpringBootConfiguration"
@@ -6118,6 +5807,12 @@
         {
           "name": "<init>",
           "parameterTypes": []
+        },
+        {
+          "name": "setPort",
+          "parameterTypes": [
+            "java.lang.Integer"
+          ]
         }
       ]
     },
@@ -6412,20 +6107,6 @@
       "type": "org.springframework.boot.webmvc.autoconfigure.WelcomePageNotAcceptableHandlerMapping"
     },
     {
-      "type": "org.springframework.boot.webmvc.autoconfigure.error.AbstractErrorController"
-    },
-    {
-      "type": "org.springframework.boot.webmvc.autoconfigure.error.BasicErrorController",
-      "methods": [
-        {
-          "name": "error",
-          "parameterTypes": [
-            "jakarta.servlet.http.HttpServletRequest"
-          ]
-        }
-      ]
-    },
-    {
       "type": "org.springframework.boot.webmvc.autoconfigure.error.DefaultErrorViewResolver"
     },
     {
@@ -6435,13 +6116,6 @@
           "name": "<init>",
           "parameterTypes": [
             "org.springframework.boot.autoconfigure.web.WebProperties"
-          ]
-        },
-        {
-          "name": "basicErrorController",
-          "parameterTypes": [
-            "org.springframework.boot.webmvc.error.ErrorAttributes",
-            "org.springframework.beans.factory.ObjectProvider"
           ]
         },
         {
@@ -7207,21 +6881,6 @@
       "type": "org.springframework.security.data.repository.query.SecurityEvaluationContextExtension"
     },
     {
-      "type": "org.springframework.security.messages"
-    },
-    {
-      "type": "org.springframework.security.messages_zh"
-    },
-    {
-      "type": "org.springframework.security.messages_zh_CN"
-    },
-    {
-      "type": "org.springframework.security.messages_zh_Hans"
-    },
-    {
-      "type": "org.springframework.security.messages_zh_Hans_CN"
-    },
-    {
       "type": "org.springframework.security.oauth2.client.registration.ClientRegistration"
     },
     {
@@ -7246,9 +6905,6 @@
       "type": "org.springframework.security.web.FilterChainProxy"
     },
     {
-      "type": "org.springframework.security.web.FilterChainProxy$VirtualFilterChain"
-    },
-    {
       "type": "org.springframework.security.web.SecurityFilterChain"
     },
     {
@@ -7268,9 +6924,6 @@
     },
     {
       "type": "org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter"
-    },
-    {
-      "type": "org.springframework.security.web.authentication.AnonymousAuthenticationFilter"
     },
     {
       "type": "org.springframework.security.web.authentication.logout.LogoutFilter"
@@ -7300,9 +6953,6 @@
       "type": "org.springframework.security.web.context.SecurityContextHolderFilter"
     },
     {
-      "type": "org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter"
-    },
-    {
       "type": "org.springframework.security.web.csrf.CsrfFilter"
     },
     {
@@ -7319,9 +6969,6 @@
     },
     {
       "type": "org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter"
-    },
-    {
-      "type": "org.springframework.security.web.session.DisableEncodeUrlFilter"
     },
     {
       "type": "org.springframework.security.web.session.SessionManagementFilter"
@@ -7563,12 +7210,6 @@
       "type": "org.springframework.web.filter.CharacterEncodingFilter"
     },
     {
-      "type": "org.springframework.web.filter.CompositeFilter"
-    },
-    {
-      "type": "org.springframework.web.filter.CompositeFilter$VirtualFilterChain"
-    },
-    {
       "type": "org.springframework.web.filter.DelegatingFilterProxy"
     },
     {
@@ -7597,9 +7238,6 @@
     },
     {
       "type": "org.springframework.web.method.support.CompositeUriComponentsContributor"
-    },
-    {
-      "type": "org.springframework.web.method.support.InvocableHandlerMethod"
     },
     {
       "type": "org.springframework.web.method.support.UriComponentsContributor"
@@ -7838,9 +7476,6 @@
     },
     {
       "type": "org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"
-    },
-    {
-      "type": "org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod"
     },
     {
       "type": "org.springframework.web.servlet.resource.ResourceUrlProvider"
@@ -8086,853 +7721,6 @@
     },
     {
       "type": "reactor.netty.http.client.HttpClient"
-    },
-    {
-      "type": "sun.awt.SunHints",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "INTVAL_STROKE_PURE"
-        }
-      ]
-    },
-    {
-      "type": "sun.awt.Win32GraphicsEnvironment",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "dwmCompositionChanged",
-          "parameterTypes": [
-            "boolean"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.awt.image.BufImgSurfaceData$ICMColorData",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "pData"
-        }
-      ],
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.awt.image.IntegerComponentRaster",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "data"
-        },
-        {
-          "name": "dataOffsets"
-        },
-        {
-          "name": "pixelStride"
-        },
-        {
-          "name": "scanlineStride"
-        },
-        {
-          "name": "type"
-        }
-      ]
-    },
-    {
-      "type": "sun.awt.image.SunVolatileImage",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "volSurfaceManager"
-        }
-      ]
-    },
-    {
-      "type": "sun.awt.image.VolatileSurfaceManager",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "sdCurrent"
-        }
-      ]
-    },
-    {
-      "type": "sun.awt.windows.WDesktopPeer",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "systemSleepCallback",
-          "parameterTypes": [
-            "boolean"
-          ]
-        },
-        {
-          "name": "userSessionCallback",
-          "parameterTypes": [
-            "boolean",
-            "java.awt.desktop.UserSessionEvent$Reason"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.awt.windows.WToolkit",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "displayChanged",
-          "parameterTypes": []
-        },
-        {
-          "name": "windowsSettingChange",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "sun.font.CharToGlyphMapper",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "charToGlyph",
-          "parameterTypes": [
-            "int"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.font.Font2D",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "canDisplay",
-          "parameterTypes": [
-            "char"
-          ]
-        },
-        {
-          "name": "charToGlyphRaw",
-          "parameterTypes": [
-            "int"
-          ]
-        },
-        {
-          "name": "charToVariationGlyphRaw",
-          "parameterTypes": [
-            "int",
-            "int"
-          ]
-        },
-        {
-          "name": "getMapper",
-          "parameterTypes": []
-        },
-        {
-          "name": "getTableBytes",
-          "parameterTypes": [
-            "int"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.font.FontStrike",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "getGlyphMetrics",
-          "parameterTypes": [
-            "int"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.font.FontUtilities",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "debugFonts",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "sun.font.FreetypeFontScaler",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "invalidateScaler",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "sun.font.GlyphList",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "gposx"
-        },
-        {
-          "name": "gposy"
-        },
-        {
-          "name": "images"
-        },
-        {
-          "name": "lcdRGBOrder"
-        },
-        {
-          "name": "lcdSubPixPos"
-        },
-        {
-          "name": "len"
-        },
-        {
-          "name": "positions"
-        },
-        {
-          "name": "usePositions"
-        }
-      ]
-    },
-    {
-      "type": "sun.font.PhysicalStrike",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "pScalerContext"
-        }
-      ],
-      "methods": [
-        {
-          "name": "adjustPoint",
-          "parameterTypes": [
-            "java.awt.geom.Point2D$Float"
-          ]
-        },
-        {
-          "name": "getGlyphPoint",
-          "parameterTypes": [
-            "int",
-            "int"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.font.StrikeMetrics",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "float",
-            "float",
-            "float",
-            "float",
-            "float",
-            "float",
-            "float",
-            "float",
-            "float",
-            "float"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.font.TrueTypeFont",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "readBlock",
-          "parameterTypes": [
-            "java.nio.ByteBuffer",
-            "int",
-            "int"
-          ]
-        },
-        {
-          "name": "readBytes",
-          "parameterTypes": [
-            "int",
-            "int"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.font.Type1Font",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "readFile",
-          "parameterTypes": [
-            "java.nio.ByteBuffer"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.Disposer",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "addRecord",
-          "parameterTypes": [
-            "java.lang.Object",
-            "long",
-            "long"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.InvalidPipeException",
-      "jniAccessible": true
-    },
-    {
-      "type": "sun.java2d.NullSurfaceData",
-      "jniAccessible": true
-    },
-    {
-      "type": "sun.java2d.SunGraphics2D",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "clipRegion"
-        },
-        {
-          "name": "composite"
-        },
-        {
-          "name": "eargb"
-        },
-        {
-          "name": "lcdTextContrast"
-        },
-        {
-          "name": "pixel"
-        },
-        {
-          "name": "strokeHint"
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.SurfaceData",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "pData"
-        },
-        {
-          "name": "valid"
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.Blit",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.BlitBg",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.CompositeType",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "AnyAlpha"
-        },
-        {
-          "name": "Src"
-        },
-        {
-          "name": "SrcNoEa"
-        },
-        {
-          "name": "SrcOver"
-        },
-        {
-          "name": "SrcOverNoEa"
-        },
-        {
-          "name": "Xor"
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.DrawGlyphList",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.DrawGlyphListAA",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.DrawGlyphListLCD",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.DrawLine",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.DrawParallelogram",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.DrawPath",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.DrawPolygons",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.DrawRect",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.FillParallelogram",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.FillPath",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.FillRect",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.FillSpans",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.GraphicsPrimitive",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "pNativePrim"
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.GraphicsPrimitiveMgr",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "register",
-          "parameterTypes": [
-            "sun.java2d.loops.GraphicsPrimitive[]"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.GraphicsPrimitive[]"
-    },
-    {
-      "type": "sun.java2d.loops.MaskBlit",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.MaskFill",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.ScaledBlit",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.SurfaceType",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "Any3Byte"
-        },
-        {
-          "name": "Any4Byte"
-        },
-        {
-          "name": "AnyByte"
-        },
-        {
-          "name": "AnyColor"
-        },
-        {
-          "name": "AnyInt"
-        },
-        {
-          "name": "AnyShort"
-        },
-        {
-          "name": "ByteBinary1Bit"
-        },
-        {
-          "name": "ByteBinary2Bit"
-        },
-        {
-          "name": "ByteBinary4Bit"
-        },
-        {
-          "name": "ByteGray"
-        },
-        {
-          "name": "ByteIndexed"
-        },
-        {
-          "name": "ByteIndexedBm"
-        },
-        {
-          "name": "FourByteAbgr"
-        },
-        {
-          "name": "FourByteAbgrPre"
-        },
-        {
-          "name": "Index12Gray"
-        },
-        {
-          "name": "Index8Gray"
-        },
-        {
-          "name": "IntArgb"
-        },
-        {
-          "name": "IntArgbBm"
-        },
-        {
-          "name": "IntArgbPre"
-        },
-        {
-          "name": "IntBgr"
-        },
-        {
-          "name": "IntRgb"
-        },
-        {
-          "name": "IntRgbx"
-        },
-        {
-          "name": "OpaqueColor"
-        },
-        {
-          "name": "ThreeByteBgr"
-        },
-        {
-          "name": "Ushort4444Argb"
-        },
-        {
-          "name": "Ushort555Rgb"
-        },
-        {
-          "name": "Ushort555Rgbx"
-        },
-        {
-          "name": "Ushort565Rgb"
-        },
-        {
-          "name": "UshortGray"
-        },
-        {
-          "name": "UshortIndexed"
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.TransformHelper",
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.loops.XORComposite",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "alphaMask"
-        },
-        {
-          "name": "xorColor"
-        },
-        {
-          "name": "xorPixel"
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.marlin.DMarlinRenderingEngine",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.pipe.Region",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "bands"
-        },
-        {
-          "name": "endIndex"
-        },
-        {
-          "name": "hix"
-        },
-        {
-          "name": "hiy"
-        },
-        {
-          "name": "lox"
-        },
-        {
-          "name": "loy"
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.pipe.RegionIterator",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "curIndex"
-        },
-        {
-          "name": "numXbands"
-        },
-        {
-          "name": "region"
-        }
-      ]
-    },
-    {
-      "type": "sun.java2d.windows.WindowsFlags",
-      "jniAccessible": true,
-      "fields": [
-        {
-          "name": "d3dEnabled"
-        },
-        {
-          "name": "d3dSet"
-        },
-        {
-          "name": "setHighDPIAware"
-        }
-      ]
     },
     {
       "type": "sun.launcher.LauncherHelper",
@@ -9440,6 +8228,13 @@
     {
       "type": {
         "proxy": [
+          "dev.qingzhou.pushserver.mapper.portal.PortalSystemConfigMapper"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
           "dev.qingzhou.pushserver.mapper.portal.PortalUserMapper"
         ]
       }
@@ -9558,38 +8353,6 @@
     {
       "type": {
         "lambda": {
-          "declaringClass": "dev.qingzhou.pushserver.service.impl.DashboardServiceImpl",
-          "interfaces": [
-            "com.baomidou.mybatisplus.core.toolkit.support.SFunction"
-          ]
-        }
-      },
-      "methods": [
-        {
-          "name": "writeReplace",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": {
-        "lambda": {
-          "declaringClass": "dev.qingzhou.pushserver.service.impl.PortalAppApiKeyServiceImpl",
-          "interfaces": [
-            "com.baomidou.mybatisplus.core.toolkit.support.SFunction"
-          ]
-        }
-      },
-      "methods": [
-        {
-          "name": "writeReplace",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": {
-        "lambda": {
           "declaringClass": "org.springframework.boot.autoconfigure.aop.AopAutoConfiguration$ClassProxyingConfiguration",
           "interfaces": [
             "org.springframework.beans.factory.config.BeanFactoryPostProcessor"
@@ -9639,6 +8402,9 @@
       "glob": "/dev/qingzhou/pushserver/mapper/portal/PortalMessageLogMapper.xml"
     },
     {
+      "glob": "/dev/qingzhou/pushserver/mapper/portal/PortalSystemConfigMapper.xml"
+    },
+    {
       "glob": "/dev/qingzhou/pushserver/mapper/portal/PortalUserMapper.xml"
     },
     {
@@ -9685,21 +8451,6 @@
     },
     {
       "glob": "META-INF/services/java.util.spi.ResourceBundleControlProvider"
-    },
-    {
-      "glob": "META-INF/services/javax.imageio.spi.ImageInputStreamSpi"
-    },
-    {
-      "glob": "META-INF/services/javax.imageio.spi.ImageOutputStreamSpi"
-    },
-    {
-      "glob": "META-INF/services/javax.imageio.spi.ImageReaderSpi"
-    },
-    {
-      "glob": "META-INF/services/javax.imageio.spi.ImageTranscoderSpi"
-    },
-    {
-      "glob": "META-INF/services/javax.imageio.spi.ImageWriterSpi"
     },
     {
       "glob": "META-INF/services/javax.xml.parsers.DocumentBuilderFactory"
@@ -9876,9 +8627,6 @@
       "glob": "dev/qingzhou/pushserver/config/MyBatisNativeConfiguration.class"
     },
     {
-      "glob": "dev/qingzhou/pushserver/config/PortalAdminInitializer.class"
-    },
-    {
       "glob": "dev/qingzhou/pushserver/config/PortalDatabaseConfig.class"
     },
     {
@@ -9900,6 +8648,9 @@
       "glob": "dev/qingzhou/pushserver/config/WebConfig.class"
     },
     {
+      "glob": "dev/qingzhou/pushserver/controller/CaptchaController$CaptchaResponse.class"
+    },
+    {
       "glob": "dev/qingzhou/pushserver/controller/CaptchaController.class"
     },
     {
@@ -9916,6 +8667,12 @@
     },
     {
       "glob": "dev/qingzhou/pushserver/controller/PortalCorpController.class"
+    },
+    {
+      "glob": "dev/qingzhou/pushserver/controller/PortalErrorController.class"
+    },
+    {
+      "glob": "dev/qingzhou/pushserver/controller/PortalInitController.class"
     },
     {
       "glob": "dev/qingzhou/pushserver/controller/PortalMeController.class"
@@ -9946,6 +8703,9 @@
     },
     {
       "glob": "dev/qingzhou/pushserver/mapper/portal/PortalMessageLogMapper.xml"
+    },
+    {
+      "glob": "dev/qingzhou/pushserver/mapper/portal/PortalSystemConfigMapper.xml"
     },
     {
       "glob": "dev/qingzhou/pushserver/mapper/portal/PortalUserMapper.xml"
@@ -9993,6 +8753,9 @@
       "glob": "dev/qingzhou/pushserver/service/PushService.class"
     },
     {
+      "glob": "dev/qingzhou/pushserver/service/SystemConfigService.class"
+    },
+    {
       "glob": "dev/qingzhou/pushserver/service/impl/DashboardServiceImpl.class"
     },
     {
@@ -10023,7 +8786,7 @@
       "glob": "dev/qingzhou/pushserver/service/impl/PushServiceImpl.class"
     },
     {
-      "glob": "fonts/GoogleSans_17pt-BoldItalic.ttf"
+      "glob": "dev/qingzhou/pushserver/service/impl/SystemConfigServiceImpl.class"
     },
     {
       "glob": "git.properties"
@@ -10590,12 +9353,6 @@
       "glob": "org/springframework/beans/factory/InitializingBean.class"
     },
     {
-      "glob": "org/springframework/boot/ApplicationRunner.class"
-    },
-    {
-      "glob": "org/springframework/boot/Runner.class"
-    },
-    {
       "glob": "org/springframework/boot/autoconfigure/AutoConfiguration.class"
     },
     {
@@ -11076,9 +9833,6 @@
       "glob": "org/springframework/boot/web/server/autoconfigure/servlet/ServletWebServerConfiguration.class"
     },
     {
-      "glob": "org/springframework/boot/web/server/mime-mappings.properties"
-    },
-    {
       "glob": "org/springframework/boot/webmvc/autoconfigure/DispatcherServletAutoConfiguration$DefaultDispatcherServletCondition.class"
     },
     {
@@ -11143,6 +9897,9 @@
     },
     {
       "glob": "org/springframework/boot/webmvc/autoconfigure/error/ErrorMvcAutoConfiguration.class"
+    },
+    {
+      "glob": "org/springframework/boot/webmvc/error/ErrorController.class"
     },
     {
       "glob": "org/springframework/context/ApplicationContextAware.class"
@@ -11247,21 +10004,6 @@
       "glob": "org/springframework/security/core/userdetails/UserDetailsService.class"
     },
     {
-      "glob": "org/springframework/security/messages.properties"
-    },
-    {
-      "glob": "org/springframework/security/messages_zh.properties"
-    },
-    {
-      "glob": "org/springframework/security/messages_zh_CN.properties"
-    },
-    {
-      "glob": "org/springframework/security/messages_zh_Hans.properties"
-    },
-    {
-      "glob": "org/springframework/security/messages_zh_Hans_CN.properties"
-    },
-    {
       "glob": "org/springframework/transaction/annotation/AbstractTransactionManagementConfiguration.class"
     },
     {
@@ -11325,16 +10067,31 @@
       "glob": "sqlite-jdbc.properties"
     },
     {
-      "glob": "static/assets/index-BaOJfd1k.css"
+      "glob": "static/assets/DashboardView-C4iIGxAK.js"
     },
     {
-      "glob": "static/assets/index-BuBkFsDM.js"
+      "glob": "static/assets/DashboardView-DHdOv7sv.css"
     },
     {
-      "glob": "static/favicon.ico"
+      "glob": "static/assets/InitView-Bab0GDZm.css"
+    },
+    {
+      "glob": "static/assets/InitView-kXJnua4J.js"
+    },
+    {
+      "glob": "static/assets/index-CS5Hdeag.js"
+    },
+    {
+      "glob": "static/assets/index-CmAJI08-.css"
+    },
+    {
+      "glob": "static/favicon.png"
     },
     {
       "glob": "static/index.html"
+    },
+    {
+      "glob": "static/logo.png"
     },
     {
       "module": "java.base",
@@ -11347,18 +10104,6 @@
     {
       "module": "java.base",
       "glob": "sun/net/idn/uidna.spp"
-    },
-    {
-      "module": "java.desktop",
-      "glob": "sun/awt/resources/awt_zh.properties"
-    },
-    {
-      "module": "java.desktop",
-      "glob": "sun/awt/resources/awt_zh_Hans.properties"
-    },
-    {
-      "module": "java.desktop",
-      "glob": "sun/awt/resources/awt_zh_Hans_CN.properties"
     },
     {
       "bundle": "jakarta.servlet.LocalStrings"
@@ -11455,12 +10200,6 @@
     },
     {
       "bundle": "org.apache.tomcat.websocket.server.LocalStrings"
-    },
-    {
-      "bundle": "org.springframework.security.messages"
-    },
-    {
-      "bundle": "sun.awt.resources.awt"
     }
   ]
 }
