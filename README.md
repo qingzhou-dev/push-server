@@ -4,6 +4,7 @@
 ![Java](https://img.shields.io/badge/Java-25%2B-blue.svg)
 ![GraalVM](https://img.shields.io/badge/GraalVM-Native-orange.svg)
 ![License](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
+![Collaborator](https://img.shields.io/badge/Co--authored--by-Google%20Gemini-blue?logo=google-gemini)
 
 **push-server** 是一个基于 Spring Boot 4 构建的、带管理后台的轻量级企业微信推送服务。它封装了企业微信复杂的 API，对外提供极其简单的 HTTP 接口，支持 Docker 原生镜像部署（启动仅需 0.1s，内存占用 <50MB）。
 
@@ -178,3 +179,11 @@ push:
     agent-id: "你的应用AgentID"   # V1 使用
 ```
 ---
+## 🤝 鸣谢 (Credits)
+
+本项目是**AI 辅助开发**的实践案例，特别鸣谢：
+
+* **[Google Gemini](https://gemini.google.com/)**：深度参与了本项目的开发全过程，独立完成了**全部前端代码的编写、UI/UX 设计以及样式优化**，展现了卓越的代码生成与设计能力。
+* **开源社区**：感谢 Spring Boot, Vue, Element Plus 等优秀开源项目提供的坚实基础。
+
+如果你喜欢这个项目，请不要吝啬你的 Star！🌟

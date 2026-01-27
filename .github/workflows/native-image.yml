@@ -91,10 +91,18 @@ jobs:
           tag_name: ${{ github.ref_name }}
           files: target/push-server-${{ matrix.artifact }}${{ matrix.ext }}
 
-  docker:
-    name: docker (linux)
-    runs-on: ubuntu-latest
+  docker-build:
+    name: docker build (${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
     needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            arch: amd64
+          - os: ubuntu-24.04-arm
+            arch: arm64
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -142,6 +150,40 @@ jobs:
         shell: bash
         run: ${{ env.MVN_CMD }} -B -Pnative -DskipTests native:compile
 
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: push-server-${{ matrix.arch }}
+          path: target/push-server
+          if-no-files-found: error
+
+  docker-push:
+    name: docker push
+    runs-on: ubuntu-latest
+    needs: docker-build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download amd64 binary
+        uses: actions/download-artifact@v4
+        with:
+          name: push-server-amd64
+          path: bin-amd64
+
+      - name: Download arm64 binary
+        uses: actions/download-artifact@v4
+        with:
+          name: push-server-arm64
+          path: bin-arm64
+
+      - name: Prepare binaries
+        run: |
+          mkdir -p target
+          cp bin-amd64/push-server target/push-server-amd64
+          cp bin-arm64/push-server target/push-server-arm64
+          ls -R target
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -175,5 +217,6 @@ jobs:
           context: .
           file: Dockerfile
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
