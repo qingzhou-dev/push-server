@@ -20,6 +20,11 @@ public class PortalWecomApp {
     private String agentId;
 
     private String secret;
+    
+    private String token;
+    
+    @TableField("encoding_aes_key")
+    private String encodingAesKey;
 
     private String name;
 
