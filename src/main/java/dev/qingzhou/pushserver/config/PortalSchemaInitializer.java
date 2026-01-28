@@ -52,6 +52,8 @@ public class PortalSchemaInitializer {
                     user_id INTEGER NOT NULL,
                     agent_id TEXT NOT NULL,
                     secret TEXT NOT NULL,
+                    token TEXT,
+                    encoding_aes_key TEXT,
                     name TEXT,
                     avatar_url TEXT,
                     description TEXT,
@@ -78,6 +80,8 @@ public class PortalSchemaInitializer {
         List<String> alterStatements = new ArrayList<>();
         alterStatements.add("ALTER TABLE v2_app_api_key ADD COLUMN api_key_plain TEXT NOT NULL DEFAULT ''");
         alterStatements.add("ALTER TABLE v2_app_api_key ADD COLUMN rate_limit_per_minute INTEGER NOT NULL DEFAULT 0");
+        alterStatements.add("ALTER TABLE v2_wecom_app ADD COLUMN token TEXT");
+        alterStatements.add("ALTER TABLE v2_wecom_app ADD COLUMN encoding_aes_key TEXT");
         statements.add("""
                 CREATE TABLE IF NOT EXISTS v2_message_log (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
