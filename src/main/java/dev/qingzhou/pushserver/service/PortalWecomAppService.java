@@ -12,6 +12,8 @@ public interface PortalWecomAppService extends IService<PortalWecomApp> {
 
     PortalWecomApp requireByUser(Long userId, Long appId);
 
+    PortalWecomApp updateApp(Long userId, Long appId, String secret, String token, String encodingAesKey);
+
     PortalWecomApp syncApp(Long userId, Long appId);
 
     void deleteApp(Long userId, Long appId);
