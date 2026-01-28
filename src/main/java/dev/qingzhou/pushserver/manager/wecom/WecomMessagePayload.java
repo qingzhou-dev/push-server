@@ -1,205 +1,93 @@
 package dev.qingzhou.pushserver.manager.wecom;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import java.util.List;
 
+@Data
 public class WecomMessagePayload {
 
+    // ==========================================
+    // 发送消息字段 (JSON)
+    // ==========================================
     private String touser;
     private String toparty;
     private String totag;
     private String msgtype;
     private Long agentid;
+    private Integer safe;
+    
+    @JsonProperty("enable_id_trans")
+    private Integer enableIdTrans;
+    
+    @JsonProperty("enable_duplicate_check")
+    private Integer enableDuplicateCheck;
+    
+    @JsonProperty("duplicate_check_interval")
+    private Integer duplicateCheckInterval;
+
     private Text text;
-    private TextCard textcard;
     private Markdown markdown;
+    private TextCard textcard;
     private News news;
 
-    public String getTouser() {
-        return touser;
-    }
+    // ==========================================
+    // 接收回调字段 (XML 解析后赋值)
+    // ==========================================
+    private String toUserName;
+    private String fromUserName;
+    private Long createTime;
+    // 注意：接收时的 MsgType 和发送时的 msgtype 可能大小写不同，
+    // 但通常我们可以复用 msgtype 字段，或者分开。
+    // 为了不破坏现有发送逻辑，发送用 msgtype (全小写)。
+    // 接收到的 XML MsgType 也是 "text" 等小写 (在 XML 值里)，但标签是 PascalCase。
+    // 这里我们额外定义字段用于接收，避免混淆
+    private String receiveMsgType; 
+    
+    private String content; // 接收到的文本内容
+    private Long msgId;
+    private String receiveAgentId; // 接收到的 AgentID
+    private String event;
+    private String eventKey;
+    
+    // 图片消息字段
+    private String picUrl;
+    private String mediaId;
 
-    public void setTouser(String touser) {
-        this.touser = touser;
-    }
+    // ==========================================
+    // 内部类定义 (用于发送消息)
+    // ==========================================
 
-    public String getToparty() {
-        return toparty;
-    }
-
-    public void setToparty(String toparty) {
-        this.toparty = toparty;
-    }
-
-    public String getTotag() {
-        return totag;
-    }
-
-    public void setTotag(String totag) {
-        this.totag = totag;
-    }
-
-    public String getMsgtype() {
-        return msgtype;
-    }
-
-    public void setMsgtype(String msgtype) {
-        this.msgtype = msgtype;
-    }
-
-    public Long getAgentid() {
-        return agentid;
-    }
-
-    public void setAgentid(Long agentid) {
-        this.agentid = agentid;
-    }
-
-    public Text getText() {
-        return text;
-    }
-
-    public void setText(Text text) {
-        this.text = text;
-    }
-
-    public TextCard getTextcard() {
-        return textcard;
-    }
-
-    public void setTextcard(TextCard textcard) {
-        this.textcard = textcard;
-    }
-
-    public Markdown getMarkdown() {
-        return markdown;
-    }
-
-    public void setMarkdown(Markdown markdown) {
-        this.markdown = markdown;
-    }
-
-    public News getNews() {
-        return news;
-    }
-
-    public void setNews(News news) {
-        this.news = news;
-    }
-
+    @Data
     public static class Text {
         private String content;
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
     }
 
+    @Data
+    public static class Markdown {
+        private String content;
+    }
+
+    @Data
     public static class TextCard {
         private String title;
         private String description;
         private String url;
         @JsonProperty("btntxt")
         private String btnText;
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        public String getBtnText() {
-            return btnText;
-        }
-
-        public void setBtnText(String btnText) {
-            this.btnText = btnText;
-        }
     }
 
-    public static class Markdown {
-        private String content;
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-    }
-
+    @Data
     public static class News {
         private List<Article> articles;
-
-        public List<Article> getArticles() {
-            return articles;
-        }
-
-        public void setArticles(List<Article> articles) {
-            this.articles = articles;
-        }
     }
 
+    @Data
     public static class Article {
         private String title;
         private String description;
         private String url;
         @JsonProperty("picurl")
         private String picUrl;
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        public String getPicUrl() {
-            return picUrl;
-        }
-
-        public void setPicUrl(String picUrl) {
-            this.picUrl = picUrl;
-        }
     }
 }
