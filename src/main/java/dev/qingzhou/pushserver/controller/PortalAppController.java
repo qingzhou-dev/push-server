@@ -4,6 +4,7 @@ import dev.qingzhou.pushserver.common.PortalResponse;
 import dev.qingzhou.pushserver.common.PortalSessionSupport;
 import dev.qingzhou.pushserver.model.dto.portal.PortalAppApiKeyUpdateRequest;
 import dev.qingzhou.pushserver.model.dto.portal.PortalAppCreateRequest;
+import dev.qingzhou.pushserver.model.dto.portal.PortalAppUpdateRequest;
 import dev.qingzhou.pushserver.model.entity.portal.PortalAppApiKey;
 import dev.qingzhou.pushserver.model.entity.portal.PortalWecomApp;
 import dev.qingzhou.pushserver.model.vo.portal.PortalAppApiKeyResponse;
@@ -42,6 +43,22 @@ public class PortalAppController {
     ) {
         Long userId = PortalSessionSupport.requireUserId(session);
         PortalWecomApp app = appService.addApp(userId, request.getAgentId(), request.getSecret());
+        return PortalResponse.ok(toResponse(app));
+    }
+
+    @PutMapping("/{appId}")
+    public PortalResponse<PortalAppResponse> update(
+            @PathVariable Long appId,
+            @RequestBody PortalAppUpdateRequest request,
+            HttpSession session
+    ) {
+        Long userId = PortalSessionSupport.requireUserId(session);
+        PortalWecomApp app = appService.updateApp(
+                userId, appId,
+                request.getSecret(),
+                request.getToken(),
+                request.getEncodingAesKey()
+        );
         return PortalResponse.ok(toResponse(app));
     }
 
