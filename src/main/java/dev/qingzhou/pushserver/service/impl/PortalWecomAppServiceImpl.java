@@ -77,6 +77,36 @@ public class PortalWecomAppServiceImpl extends ServiceImpl<PortalWecomAppMapper,
     }
 
     @Override
+    public PortalWecomApp updateApp(Long userId, Long appId, String secret, String token, String encodingAesKey) {
+        PortalWecomApp app = requireByUser(userId, appId);
+        boolean changed = false;
+        
+        if (StringUtils.hasText(secret) && !secret.equals(app.getSecret())) {
+            app.setSecret(secret.trim());
+            // 如果 Secret 变更，需要清除 Token 缓存
+            accessTokenService.evict(app.getId());
+            changed = true;
+        }
+        
+        if (token != null && !token.equals(app.getToken())) {
+            app.setToken(token.trim());
+            changed = true;
+        }
+        
+        if (encodingAesKey != null && !encodingAesKey.equals(app.getEncodingAesKey())) {
+            app.setEncodingAesKey(encodingAesKey.trim());
+            changed = true;
+        }
+        
+        if (changed) {
+            app.setUpdatedAt(System.currentTimeMillis());
+            updateById(app);
+        }
+        
+        return app;
+    }
+
+    @Override
     public PortalWecomApp syncApp(Long userId, Long appId) {
         PortalWecomApp app = requireByUser(userId, appId);
         PortalCorpConfig corpConfig = corpConfigService.requireByUserId(userId);
