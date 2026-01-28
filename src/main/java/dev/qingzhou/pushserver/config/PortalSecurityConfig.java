@@ -110,12 +110,13 @@ public class PortalSecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/v2/openapi/**").permitAll()
                         .requestMatchers("/api/v2/auth/register", "/api/v2/auth/csrf").permitAll()
+                        .requestMatchers("/api/v2/wecom/**").permitAll()
                         .requestMatchers("/api/v1/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf
                         .spa()
-                        .ignoringRequestMatchers("/api/v1/**", "/api/login", "/api/captcha", "/api/v2/openapi/**")
+                        .ignoringRequestMatchers("/api/v1/**", "/api/login", "/api/captcha", "/api/v2/openapi/**", "/api/v2/wecom/**")
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED)
