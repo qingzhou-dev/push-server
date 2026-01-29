@@ -10,11 +10,13 @@ import dev.qingzhou.pushserver.model.dto.portal.PortalMessageSendRequest;
 import dev.qingzhou.pushserver.model.dto.portal.PortalMessageType;
 import dev.qingzhou.pushserver.model.entity.portal.PortalCorpConfig;
 import dev.qingzhou.pushserver.model.entity.portal.PortalMessageLog;
+import dev.qingzhou.pushserver.model.entity.portal.PortalProxyConfig;
 import dev.qingzhou.pushserver.model.entity.portal.PortalWecomApp;
 import dev.qingzhou.pushserver.service.PortalAccessTokenService;
 import dev.qingzhou.pushserver.service.PortalCorpConfigService;
 import dev.qingzhou.pushserver.service.PortalMessageLogService;
 import dev.qingzhou.pushserver.service.PortalMessageService;
+import dev.qingzhou.pushserver.service.PortalProxyConfigService;
 import dev.qingzhou.pushserver.service.PortalWecomAppService;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,7 @@ public class PortalMessageServiceImpl implements PortalMessageService {
     private final WecomApiClient wecomApiClient;
     private final PortalMessageLogService messageLogService;
     private final ObjectMapper objectMapper;
+    private final PortalProxyConfigService proxyConfigService;
 
     public PortalMessageServiceImpl(
             PortalWecomAppService appService,
@@ -37,7 +40,8 @@ public class PortalMessageServiceImpl implements PortalMessageService {
             PortalAccessTokenService accessTokenService,
             WecomApiClient wecomApiClient,
             PortalMessageLogService messageLogService,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            PortalProxyConfigService proxyConfigService
     ) {
         this.appService = appService;
         this.corpConfigService = corpConfigService;
@@ -45,13 +49,16 @@ public class PortalMessageServiceImpl implements PortalMessageService {
         this.wecomApiClient = wecomApiClient;
         this.messageLogService = messageLogService;
         this.objectMapper = objectMapper;
+        this.proxyConfigService = proxyConfigService;
     }
 
     @Override
     public PortalMessageLog send(Long userId, PortalMessageSendRequest request) {
         PortalWecomApp app = appService.requireByUser(userId, request.getAppId());
         PortalCorpConfig corpConfig = corpConfigService.requireByUserId(userId);
-        String accessToken = accessTokenService.getToken(app.getId(), corpConfig.getCorpId(), app.getSecret());
+        PortalProxyConfig proxyConfig = proxyConfigService.getByUserId(userId);
+        
+        String accessToken = accessTokenService.getToken(app.getId(), corpConfig.getCorpId(), app.getSecret(), proxyConfig);
         WecomMessagePayload payload = buildPayload(app, request);
         String requestJson = toJson(payload);
         WecomSendResponse response = null;
@@ -60,7 +67,7 @@ public class PortalMessageServiceImpl implements PortalMessageService {
         boolean success = false;
         PortalMessageLog log = null;
         try {
-            response = wecomApiClient.sendMessage(accessToken, payload);
+            response = wecomApiClient.sendMessage(accessToken, payload, proxyConfig);
             responseJson = toJson(response);
             success = response.isSuccess();
             if (!success) {

@@ -11,6 +11,10 @@ spring:
     resources:
       static-locations: "file:./dist/, classpath:/static/" # 优先找本地 dist，找不到找包内 static
 
+info:
+  app:
+    version: @project.version@
+
 server:
   port: 8000
 #  yDEHjQUcqGgD

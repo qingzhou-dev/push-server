@@ -9,9 +9,11 @@ import dev.qingzhou.pushserver.manager.wecom.WecomApiClient;
 import dev.qingzhou.pushserver.manager.wecom.WecomToken;
 import dev.qingzhou.pushserver.mapper.portal.PortalWecomAppMapper;
 import dev.qingzhou.pushserver.model.entity.portal.PortalCorpConfig;
+import dev.qingzhou.pushserver.model.entity.portal.PortalProxyConfig;
 import dev.qingzhou.pushserver.model.entity.portal.PortalWecomApp;
 import dev.qingzhou.pushserver.service.PortalAccessTokenService;
 import dev.qingzhou.pushserver.service.PortalCorpConfigService;
+import dev.qingzhou.pushserver.service.PortalProxyConfigService;
 import dev.qingzhou.pushserver.service.PortalWecomAppService;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -23,15 +25,18 @@ public class PortalWecomAppServiceImpl extends ServiceImpl<PortalWecomAppMapper,
     private final WecomApiClient wecomApiClient;
     private final PortalAccessTokenService accessTokenService;
     private final PortalCorpConfigService corpConfigService;
+    private final PortalProxyConfigService proxyConfigService;
 
     public PortalWecomAppServiceImpl(
             WecomApiClient wecomApiClient,
             PortalAccessTokenService accessTokenService,
-            PortalCorpConfigService corpConfigService
+            PortalCorpConfigService corpConfigService,
+            PortalProxyConfigService proxyConfigService
     ) {
         this.wecomApiClient = wecomApiClient;
         this.accessTokenService = accessTokenService;
         this.corpConfigService = corpConfigService;
+        this.proxyConfigService = proxyConfigService;
     }
 
     @Override
@@ -43,8 +48,9 @@ public class PortalWecomAppServiceImpl extends ServiceImpl<PortalWecomAppMapper,
             throw new PortalException(PortalStatus.CONFLICT, "Agent 已存在");
         }
         PortalCorpConfig corpConfig = corpConfigService.requireByUserId(userId);
-        WecomToken token = accessTokenService.fetchToken(corpConfig.getCorpId(), secret);
-        WecomAgentInfo info = wecomApiClient.getAgentInfo(token.getAccessToken(), agentId);
+        PortalProxyConfig proxyConfig = proxyConfigService.getByUserId(userId);
+        WecomToken token = accessTokenService.fetchToken(corpConfig.getCorpId(), secret, proxyConfig);
+        WecomAgentInfo info = wecomApiClient.getAgentInfo(token.getAccessToken(), agentId, proxyConfig);
         PortalWecomApp app = new PortalWecomApp();
         long now = System.currentTimeMillis();
         app.setUserId(userId);
@@ -110,8 +116,9 @@ public class PortalWecomAppServiceImpl extends ServiceImpl<PortalWecomAppMapper,
     public PortalWecomApp syncApp(Long userId, Long appId) {
         PortalWecomApp app = requireByUser(userId, appId);
         PortalCorpConfig corpConfig = corpConfigService.requireByUserId(userId);
-        String accessToken = accessTokenService.getToken(app.getId(), corpConfig.getCorpId(), app.getSecret());
-        WecomAgentInfo info = wecomApiClient.getAgentInfo(accessToken, app.getAgentId());
+        PortalProxyConfig proxyConfig = proxyConfigService.getByUserId(userId);
+        String accessToken = accessTokenService.getToken(app.getId(), corpConfig.getCorpId(), app.getSecret(), proxyConfig);
+        WecomAgentInfo info = wecomApiClient.getAgentInfo(accessToken, app.getAgentId(), proxyConfig);
         app.setName(info.getName());
         app.setAvatarUrl(info.getAvatarUrl());
         app.setDescription(info.getDescription());

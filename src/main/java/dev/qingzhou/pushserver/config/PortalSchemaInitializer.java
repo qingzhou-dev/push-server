@@ -74,6 +74,21 @@ public class PortalSchemaInitializer {
                 )
                 """);
         statements.add("""
+                CREATE TABLE IF NOT EXISTS v2_proxy_config (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL UNIQUE,
+                    host TEXT NOT NULL,
+                    port INTEGER NOT NULL,
+                    username TEXT,
+                    password TEXT,
+                    type TEXT NOT NULL DEFAULT 'HTTP',
+                    exit_ip TEXT,
+                    active INTEGER NOT NULL DEFAULT 1,
+                    created_at INTEGER NOT NULL,
+                    updated_at INTEGER NOT NULL
+                )
+                """);
+        statements.add("""
                 CREATE UNIQUE INDEX IF NOT EXISTS idx_v2_app_api_key_hash
                 ON v2_app_api_key(api_key_hash)
                 """);
