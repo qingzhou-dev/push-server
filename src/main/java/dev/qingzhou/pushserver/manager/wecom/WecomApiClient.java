@@ -11,11 +11,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
-import java.net.Authenticator;
-import java.net.InetSocketAddress;
-import java.net.PasswordAuthentication;
-import java.net.ProxySelector;
+import java.io.IOException;
+import java.net.*;
 import java.net.http.HttpClient;
+import java.util.Collections;
+import java.util.List;
 
 @Component
 public class WecomApiClient {
@@ -35,14 +35,28 @@ public class WecomApiClient {
             return defaultClient;
         }
 
+        Proxy.Type proxyType = "SOCKS5".equalsIgnoreCase(proxyConfig.getType()) ? Proxy.Type.SOCKS : Proxy.Type.HTTP;
+        InetSocketAddress proxyAddr = new InetSocketAddress(proxyConfig.getHost(), proxyConfig.getPort());
+
         HttpClient.Builder builder = HttpClient.newBuilder()
-                .proxy(ProxySelector.of(new InetSocketAddress(proxyConfig.getHost(), proxyConfig.getPort())));
+                .proxy(new ProxySelector() {
+                    @Override
+                    public List<Proxy> select(URI uri) {
+                        return Collections.singletonList(new Proxy(proxyType, proxyAddr));
+                    }
+
+                    @Override
+                    public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
+                        // 忽略连接失败回调
+                    }
+                });
 
         if (StringUtils.hasText(proxyConfig.getUsername())) {
             builder.authenticator(new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(proxyConfig.getUsername(), proxyConfig.getPassword().toCharArray());
+                    char[] password = proxyConfig.getPassword() != null ? proxyConfig.getPassword().toCharArray() : new char[0];
+                    return new PasswordAuthentication(proxyConfig.getUsername(), password);
                 }
             });
         }
@@ -112,7 +126,7 @@ public class WecomApiClient {
         try {
             // 尝试访问企业微信根域名，仅测试网络连通性
             getClient(proxyConfig).get()
-                    .uri("/")
+                    .uri("/cgi-bin/gettoken")
                     .retrieve()
                     .toBodilessEntity();
         } catch (Exception ex) {

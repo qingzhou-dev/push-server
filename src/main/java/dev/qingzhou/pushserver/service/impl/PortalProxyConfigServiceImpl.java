@@ -44,16 +44,19 @@ public class PortalProxyConfigServiceImpl extends ServiceImpl<PortalProxyConfigM
         config.setActive(request.getActive());
         config.setUpdatedAt(now);
 
-        // 如果启用代理，则进行连通性测试
-        if (Boolean.TRUE.equals(config.getActive())) {
-            wecomApiClient.testConnectivity(config);
-        }
-
+        // 1. 先保存配置到数据库
         if (config.getId() == null) {
             save(config);
         } else {
             updateById(config);
         }
+
+        // 2. 再进行连通性测试（如果启用）
+        // 即使测试失败抛出异常，数据也已经保存成功，方便用户后续修改
+        if (Boolean.TRUE.equals(config.getActive())) {
+            wecomApiClient.testConnectivity(config);
+        }
+        
         return config;
     }
 
