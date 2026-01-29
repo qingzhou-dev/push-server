@@ -9,12 +9,12 @@ import lombok.Data;
 @Data
 public class PortalProxyConfigRequest {
 
-    @NotBlank(message = "Host is required")
+    @NotBlank(message = "服务器地址不能为空")
     private String host;
 
-    @NotNull(message = "Port is required")
-    @Min(1)
-    @Max(65535)
+    @NotNull(message = "端口不能为空")
+    @Min(value = 1, message = "端口范围无效")
+    @Max(value = 65535, message = "端口范围无效")
     private Integer port;
 
     private String username;
