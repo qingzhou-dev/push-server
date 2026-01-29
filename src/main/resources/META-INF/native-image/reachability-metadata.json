@@ -1036,6 +1036,20 @@
           ]
         },
         {
+          "name": "createApiKey",
+          "parameterTypes": [
+            "java.lang.Long",
+            "jakarta.servlet.http.HttpSession"
+          ]
+        },
+        {
+          "name": "deleteApiKey",
+          "parameterTypes": [
+            "java.lang.Long",
+            "jakarta.servlet.http.HttpSession"
+          ]
+        },
+        {
           "name": "getApiKey",
           "parameterTypes": [
             "java.lang.Long",
@@ -1049,9 +1063,10 @@
           ]
         },
         {
-          "name": "sync",
+          "name": "updateApiKey",
           "parameterTypes": [
             "java.lang.Long",
+            "dev.qingzhou.pushserver.model.dto.portal.PortalAppApiKeyUpdateRequest",
             "jakarta.servlet.http.HttpSession"
           ]
         }
@@ -1086,13 +1101,6 @@
         {
           "name": "getCorp",
           "parameterTypes": [
-            "jakarta.servlet.http.HttpSession"
-          ]
-        },
-        {
-          "name": "upsert",
-          "parameterTypes": [
-            "dev.qingzhou.pushserver.model.dto.portal.PortalCorpConfigRequest",
             "jakarta.servlet.http.HttpSession"
           ]
         }
@@ -1137,13 +1145,6 @@
           "parameterTypes": [
             "jakarta.servlet.http.HttpSession"
           ]
-        },
-        {
-          "name": "updatePassword",
-          "parameterTypes": [
-            "dev.qingzhou.pushserver.model.dto.portal.PortalPasswordUpdateRequest",
-            "jakarta.servlet.http.HttpSession"
-          ]
         }
       ]
     },
@@ -1178,6 +1179,60 @@
       ]
     },
     {
+      "type": "dev.qingzhou.pushserver.controller.PortalProxyController",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.service.PortalProxyConfigService"
+          ]
+        },
+        {
+          "name": "delete",
+          "parameterTypes": [
+            "jakarta.servlet.http.HttpSession"
+          ]
+        },
+        {
+          "name": "getProxy",
+          "parameterTypes": [
+            "jakarta.servlet.http.HttpSession"
+          ]
+        },
+        {
+          "name": "upsert",
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.model.dto.portal.PortalProxyConfigRequest",
+            "jakarta.servlet.http.HttpSession"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.controller.PortalSystemController",
+      "fields": [
+        {
+          "name": "appVersion"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.service.SystemConfigService"
+          ]
+        },
+        {
+          "name": "getIgnoreVersion",
+          "parameterTypes": []
+        },
+        {
+          "name": "getVersion",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "dev.qingzhou.pushserver.controller.PushController",
       "methods": [
         {
@@ -1197,6 +1252,13 @@
           "parameterTypes": [
             "dev.qingzhou.pushserver.service.PortalAppApiKeyService",
             "dev.qingzhou.pushserver.service.PortalMessageService"
+          ]
+        },
+        {
+          "name": "send",
+          "parameterTypes": [
+            "java.lang.String",
+            "dev.qingzhou.pushserver.model.dto.openapi.OpenApiMessageSendRequest"
           ]
         }
       ]
@@ -1233,33 +1295,6 @@
           "name": "handlePortalException",
           "parameterTypes": [
             "dev.qingzhou.pushserver.exception.PortalException"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "dev.qingzhou.pushserver.manager.wecom.WecomAgentInfo",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        },
-        {
-          "name": "setAvatarUrl",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setDescription",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setName",
-          "parameterTypes": [
-            "java.lang.String"
           ]
         }
       ]
@@ -1377,10 +1412,40 @@
       ]
     },
     {
+      "type": "dev.qingzhou.pushserver.manager.wecom.WecomMessagePayload$Article",
+      "methods": [
+        {
+          "name": "getDescription",
+          "parameterTypes": []
+        },
+        {
+          "name": "getPicUrl",
+          "parameterTypes": []
+        },
+        {
+          "name": "getTitle",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUrl",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "dev.qingzhou.pushserver.manager.wecom.WecomMessagePayload$Markdown",
       "methods": [
         {
           "name": "getContent",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.manager.wecom.WecomMessagePayload$News",
+      "methods": [
+        {
+          "name": "getArticles",
           "parameterTypes": []
         }
       ]
@@ -1496,6 +1561,9 @@
       "type": "dev.qingzhou.pushserver.mapper.portal.PortalMessageLogMapper"
     },
     {
+      "type": "dev.qingzhou.pushserver.mapper.portal.PortalProxyConfigMapper"
+    },
+    {
       "type": "dev.qingzhou.pushserver.mapper.portal.PortalSystemConfigMapper"
     },
     {
@@ -1505,10 +1573,37 @@
       "type": "dev.qingzhou.pushserver.mapper.portal.PortalWecomAppMapper"
     },
     {
-      "type": "dev.qingzhou.pushserver.model.dto.portal.PortalCorpConfigRequest",
+      "type": "dev.qingzhou.pushserver.model.dto.openapi.OpenApiMessageSendRequest",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "setContent",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setMsgType",
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.model.dto.portal.PortalMessageType"
+          ]
+        },
+        {
+          "name": "setToAll",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.model.dto.portal.PortalAppApiKeyUpdateRequest",
       "fields": [
         {
-          "name": "corpId"
+          "name": "rateLimitPerMinute"
         }
       ],
       "methods": [
@@ -1517,9 +1612,9 @@
           "parameterTypes": []
         },
         {
-          "name": "setCorpId",
+          "name": "setRateLimitPerMinute",
           "parameterTypes": [
-            "java.lang.String"
+            "java.lang.Integer"
           ]
         }
       ]
@@ -1570,6 +1665,18 @@
           ]
         },
         {
+          "name": "setArticles",
+          "parameterTypes": [
+            "java.util.List"
+          ]
+        },
+        {
+          "name": "setBtnText",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
           "name": "setContent",
           "parameterTypes": [
             "java.lang.String"
@@ -1608,19 +1715,49 @@
       ]
     },
     {
-      "type": "dev.qingzhou.pushserver.model.dto.portal.PortalMessageSendRequest$PortalNewsArticle"
+      "type": "dev.qingzhou.pushserver.model.dto.portal.PortalMessageSendRequest$PortalNewsArticle",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "setDescription",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setPicUrl",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setTitle",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setUrl",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
     },
     {
       "type": "dev.qingzhou.pushserver.model.dto.portal.PortalMessageType"
     },
     {
-      "type": "dev.qingzhou.pushserver.model.dto.portal.PortalPasswordUpdateRequest",
+      "type": "dev.qingzhou.pushserver.model.dto.portal.PortalProxyConfigRequest",
       "fields": [
         {
-          "name": "newPassword"
+          "name": "host"
         },
         {
-          "name": "oldPassword"
+          "name": "port"
         }
       ],
       "methods": [
@@ -1629,13 +1766,43 @@
           "parameterTypes": []
         },
         {
-          "name": "setNewPassword",
+          "name": "setActive",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setExitIp",
           "parameterTypes": [
             "java.lang.String"
           ]
         },
         {
-          "name": "setOldPassword",
+          "name": "setHost",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setPassword",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setPort",
+          "parameterTypes": [
+            "java.lang.Integer"
+          ]
+        },
+        {
+          "name": "setType",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setUsername",
           "parameterTypes": [
             "java.lang.String"
           ]
@@ -1643,17 +1810,22 @@
       ]
     },
     {
-      "type": "dev.qingzhou.pushserver.model.entity.portal.PortalAppApiKey"
-    },
-    {
-      "type": "dev.qingzhou.pushserver.model.entity.portal.PortalCorpConfig",
+      "type": "dev.qingzhou.pushserver.model.entity.portal.PortalAppApiKey",
       "methods": [
         {
           "name": "<init>",
           "parameterTypes": []
         },
         {
-          "name": "getCorpId",
+          "name": "getApiKeyHash",
+          "parameterTypes": []
+        },
+        {
+          "name": "getApiKeyPlain",
+          "parameterTypes": []
+        },
+        {
+          "name": "getAppId",
           "parameterTypes": []
         },
         {
@@ -1665,11 +1837,62 @@
           "parameterTypes": []
         },
         {
+          "name": "getRateLimitPerMinute",
+          "parameterTypes": []
+        },
+        {
           "name": "getUpdatedAt",
           "parameterTypes": []
         },
         {
-          "name": "getUserId",
+          "name": "setApiKeyHash",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setApiKeyPlain",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setAppId",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "setCreatedAt",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "setId",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "setRateLimitPerMinute",
+          "parameterTypes": [
+            "java.lang.Integer"
+          ]
+        },
+        {
+          "name": "setUpdatedAt",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.model.entity.portal.PortalCorpConfig",
+      "methods": [
+        {
+          "name": "<init>",
           "parameterTypes": []
         },
         {
@@ -1872,6 +2095,125 @@
       ]
     },
     {
+      "type": "dev.qingzhou.pushserver.model.entity.portal.PortalProxyConfig",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "getActive",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCreatedAt",
+          "parameterTypes": []
+        },
+        {
+          "name": "getExitIp",
+          "parameterTypes": []
+        },
+        {
+          "name": "getHost",
+          "parameterTypes": []
+        },
+        {
+          "name": "getId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getPassword",
+          "parameterTypes": []
+        },
+        {
+          "name": "getPort",
+          "parameterTypes": []
+        },
+        {
+          "name": "getType",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUpdatedAt",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUserId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUsername",
+          "parameterTypes": []
+        },
+        {
+          "name": "setActive",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setCreatedAt",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "setExitIp",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setHost",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setId",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "setPassword",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setPort",
+          "parameterTypes": [
+            "java.lang.Integer"
+          ]
+        },
+        {
+          "name": "setType",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setUpdatedAt",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "setUserId",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "setUsername",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
       "type": "dev.qingzhou.pushserver.model.entity.portal.PortalSystemConfig",
       "methods": [
         {
@@ -1948,50 +2290,6 @@
       "methods": [
         {
           "name": "<init>",
-          "parameterTypes": []
-        },
-        {
-          "name": "getAgentId",
-          "parameterTypes": []
-        },
-        {
-          "name": "getAvatarUrl",
-          "parameterTypes": []
-        },
-        {
-          "name": "getCreatedAt",
-          "parameterTypes": []
-        },
-        {
-          "name": "getDescription",
-          "parameterTypes": []
-        },
-        {
-          "name": "getEncodingAesKey",
-          "parameterTypes": []
-        },
-        {
-          "name": "getId",
-          "parameterTypes": []
-        },
-        {
-          "name": "getName",
-          "parameterTypes": []
-        },
-        {
-          "name": "getSecret",
-          "parameterTypes": []
-        },
-        {
-          "name": "getToken",
-          "parameterTypes": []
-        },
-        {
-          "name": "getUpdatedAt",
-          "parameterTypes": []
-        },
-        {
-          "name": "getUserId",
           "parameterTypes": []
         },
         {
@@ -2301,6 +2599,51 @@
       ]
     },
     {
+      "type": "dev.qingzhou.pushserver.model.vo.portal.PortalProxyConfigResponse",
+      "methods": [
+        {
+          "name": "getActive",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCreatedAt",
+          "parameterTypes": []
+        },
+        {
+          "name": "getExitIp",
+          "parameterTypes": []
+        },
+        {
+          "name": "getHost",
+          "parameterTypes": []
+        },
+        {
+          "name": "getId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getPassword",
+          "parameterTypes": []
+        },
+        {
+          "name": "getPort",
+          "parameterTypes": []
+        },
+        {
+          "name": "getType",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUpdatedAt",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUsername",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "dev.qingzhou.pushserver.model.vo.portal.PortalUserResponse",
       "methods": [
         {
@@ -2374,6 +2717,9 @@
       "type": "dev.qingzhou.pushserver.service.PortalMessageService"
     },
     {
+      "type": "dev.qingzhou.pushserver.service.PortalProxyConfigService"
+    },
+    {
       "type": "dev.qingzhou.pushserver.service.PortalUserService"
     },
     {
@@ -2424,6 +2770,33 @@
             "java.lang.Long",
             "java.lang.Long"
           ]
+        },
+        {
+          "name": "removeByAppId",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "requireAppByApiKey",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "rotateKey",
+          "parameterTypes": [
+            "java.lang.Long",
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "updateRateLimit",
+          "parameterTypes": [
+            "java.lang.Long",
+            "java.lang.Long",
+            "java.lang.Integer"
+          ]
         }
       ]
     },
@@ -2455,13 +2828,6 @@
           "name": "requireByUserId",
           "parameterTypes": [
             "java.lang.Long"
-          ]
-        },
-        {
-          "name": "upsert",
-          "parameterTypes": [
-            "java.lang.Long",
-            "java.lang.String"
           ]
         }
       ]
@@ -2518,8 +2884,50 @@
             "dev.qingzhou.pushserver.service.PortalAccessTokenService",
             "dev.qingzhou.pushserver.manager.wecom.WecomApiClient",
             "dev.qingzhou.pushserver.service.PortalMessageLogService",
-            "com.fasterxml.jackson.databind.ObjectMapper"
+            "com.fasterxml.jackson.databind.ObjectMapper",
+            "dev.qingzhou.pushserver.service.PortalProxyConfigService"
           ]
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.service.impl.PortalProxyConfigServiceImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.manager.wecom.WecomApiClient"
+          ]
+        },
+        {
+          "name": "deleteByUserId",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "getByUserId",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "upsert",
+          "parameterTypes": [
+            "java.lang.Long",
+            "dev.qingzhou.pushserver.model.dto.portal.PortalProxyConfigRequest"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.service.impl.PortalProxyConfigServiceImpl$$SpringCGLIB$$0",
+      "fields": [
+        {
+          "name": "CGLIB$CALLBACK_FILTER"
+        },
+        {
+          "name": "CGLIB$FACTORY_DATA"
         }
       ]
     },
@@ -2535,14 +2943,6 @@
         {
           "name": "findByAccount",
           "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "updatePassword",
-          "parameterTypes": [
-            "java.lang.Long",
-            "java.lang.String",
             "java.lang.String"
           ]
         }
@@ -2567,7 +2967,8 @@
           "parameterTypes": [
             "dev.qingzhou.pushserver.manager.wecom.WecomApiClient",
             "dev.qingzhou.pushserver.service.PortalAccessTokenService",
-            "dev.qingzhou.pushserver.service.PortalCorpConfigService"
+            "dev.qingzhou.pushserver.service.PortalCorpConfigService",
+            "dev.qingzhou.pushserver.service.PortalProxyConfigService"
           ]
         },
         {
@@ -2578,13 +2979,6 @@
         },
         {
           "name": "requireByUser",
-          "parameterTypes": [
-            "java.lang.Long",
-            "java.lang.Long"
-          ]
-        },
-        {
-          "name": "syncApp",
           "parameterTypes": [
             "java.lang.Long",
             "java.lang.Long"
@@ -2621,6 +3015,13 @@
           "name": "<init>",
           "parameterTypes": [
             "dev.qingzhou.pushserver.mapper.portal.PortalSystemConfigMapper"
+          ]
+        },
+        {
+          "name": "get",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String"
           ]
         },
         {
@@ -2775,6 +3176,48 @@
     },
     {
       "type": "jakarta.validation.bootstrap.GenericBootstrap"
+    },
+    {
+      "type": "jakarta.validation.constraints.Max",
+      "methods": [
+        {
+          "name": "groups",
+          "parameterTypes": []
+        },
+        {
+          "name": "message",
+          "parameterTypes": []
+        },
+        {
+          "name": "payload",
+          "parameterTypes": []
+        },
+        {
+          "name": "value",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "jakarta.validation.constraints.Min",
+      "methods": [
+        {
+          "name": "groups",
+          "parameterTypes": []
+        },
+        {
+          "name": "message",
+          "parameterTypes": []
+        },
+        {
+          "name": "payload",
+          "parameterTypes": []
+        },
+        {
+          "name": "value",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "jakarta.validation.constraints.NotBlank",
@@ -3109,6 +3552,9 @@
     },
     {
       "type": "java.util.ImmutableCollections$AbstractImmutableMap"
+    },
+    {
+      "type": "java.util.ImmutableCollections$Map1"
     },
     {
       "type": "java.util.ImmutableCollections$MapN"
@@ -3456,6 +3902,13 @@
       "type": "org.apache.ibatis.session.SqlSession",
       "methods": [
         {
+          "name": "delete",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.Object"
+          ]
+        },
+        {
           "name": "insert",
           "parameterTypes": [
             "java.lang.String",
@@ -3573,6 +4026,30 @@
     },
     {
       "type": "org.hibernate.validator.internal.constraintvalidators.bv.NotNullValidator",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.hibernate.validator.internal.constraintvalidators.bv.number.bound.AbstractMaxValidator"
+    },
+    {
+      "type": "org.hibernate.validator.internal.constraintvalidators.bv.number.bound.AbstractMinValidator"
+    },
+    {
+      "type": "org.hibernate.validator.internal.constraintvalidators.bv.number.bound.MaxValidatorForInteger",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.hibernate.validator.internal.constraintvalidators.bv.number.bound.MinValidatorForInteger",
       "methods": [
         {
           "name": "<init>",
@@ -3827,9 +4304,6 @@
       "type": "org.springframework.aop.support.AbstractPointcutAdvisor"
     },
     {
-      "type": "org.springframework.aot.generate.Generated"
-    },
-    {
       "type": "org.springframework.aot.hint.annotation.Reflective"
     },
     {
@@ -3870,6 +4344,9 @@
     },
     {
       "type": "org.springframework.beans.factory.annotation.Qualifier"
+    },
+    {
+      "type": "org.springframework.beans.factory.annotation.Value"
     },
     {
       "type": "org.springframework.beans.factory.aot.BeanFactoryInitializationAotProcessor"
@@ -8342,6 +8819,13 @@
     {
       "type": {
         "proxy": [
+          "dev.qingzhou.pushserver.mapper.portal.PortalProxyConfigMapper"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
           "dev.qingzhou.pushserver.mapper.portal.PortalSystemConfigMapper"
         ]
       }
@@ -8514,6 +8998,9 @@
     },
     {
       "glob": "/dev/qingzhou/pushserver/mapper/portal/PortalMessageLogMapper.xml"
+    },
+    {
+      "glob": "/dev/qingzhou/pushserver/mapper/portal/PortalProxyConfigMapper.xml"
     },
     {
       "glob": "/dev/qingzhou/pushserver/mapper/portal/PortalSystemConfigMapper.xml"
@@ -8795,6 +9282,12 @@
       "glob": "dev/qingzhou/pushserver/controller/PortalMessageController.class"
     },
     {
+      "glob": "dev/qingzhou/pushserver/controller/PortalProxyController.class"
+    },
+    {
+      "glob": "dev/qingzhou/pushserver/controller/PortalSystemController.class"
+    },
+    {
       "glob": "dev/qingzhou/pushserver/controller/PushController.class"
     },
     {
@@ -8820,6 +9313,9 @@
     },
     {
       "glob": "dev/qingzhou/pushserver/mapper/portal/PortalMessageLogMapper.xml"
+    },
+    {
+      "glob": "dev/qingzhou/pushserver/mapper/portal/PortalProxyConfigMapper.xml"
     },
     {
       "glob": "dev/qingzhou/pushserver/mapper/portal/PortalSystemConfigMapper.xml"
@@ -8861,6 +9357,9 @@
       "glob": "dev/qingzhou/pushserver/service/PortalMessageService.class"
     },
     {
+      "glob": "dev/qingzhou/pushserver/service/PortalProxyConfigService.class"
+    },
+    {
       "glob": "dev/qingzhou/pushserver/service/PortalUserService.class"
     },
     {
@@ -8892,6 +9391,9 @@
     },
     {
       "glob": "dev/qingzhou/pushserver/service/impl/PortalMessageServiceImpl.class"
+    },
+    {
+      "glob": "dev/qingzhou/pushserver/service/impl/PortalProxyConfigServiceImpl.class"
     },
     {
       "glob": "dev/qingzhou/pushserver/service/impl/PortalUserServiceImpl.class"
@@ -10184,19 +10686,22 @@
       "glob": "sqlite-jdbc.properties"
     },
     {
-      "glob": "static/assets/DashboardView-BCbQXIGu.js"
+      "glob": "static/assets/DashboardView-BKGHLnEP.js"
     },
     {
       "glob": "static/assets/DashboardView-DHdOv7sv.css"
     },
     {
-      "glob": "static/assets/index-BqjGWyBh.css"
+      "glob": "static/assets/ProxyView-BNsKsUAn.css"
     },
     {
-      "glob": "static/assets/index-Cx4j2Ijj.js"
+      "glob": "static/assets/ProxyView-CdQhhSdP.js"
     },
     {
-      "glob": "static/favicon.png"
+      "glob": "static/assets/index-C9wU1arO.js"
+    },
+    {
+      "glob": "static/assets/index-sMwk8kPl.css"
     },
     {
       "glob": "static/index.html"
