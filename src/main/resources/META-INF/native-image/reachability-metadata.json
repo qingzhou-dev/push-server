@@ -962,23 +962,6 @@
           "parameterTypes": [
             "dev.qingzhou.pushserver.service.SystemConfigService"
           ]
-        },
-        {
-          "name": "captcha",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "dev.qingzhou.pushserver.controller.CaptchaController$CaptchaResponse",
-      "methods": [
-        {
-          "name": "enabled",
-          "parameterTypes": []
-        },
-        {
-          "name": "siteKey",
-          "parameterTypes": []
         }
       ]
     },
@@ -1036,14 +1019,14 @@
           ]
         },
         {
-          "name": "createApiKey",
+          "name": "create",
           "parameterTypes": [
-            "java.lang.Long",
+            "dev.qingzhou.pushserver.model.dto.portal.PortalAppCreateRequest",
             "jakarta.servlet.http.HttpSession"
           ]
         },
         {
-          "name": "deleteApiKey",
+          "name": "createApiKey",
           "parameterTypes": [
             "java.lang.Long",
             "jakarta.servlet.http.HttpSession"
@@ -1059,6 +1042,13 @@
         {
           "name": "list",
           "parameterTypes": [
+            "jakarta.servlet.http.HttpSession"
+          ]
+        },
+        {
+          "name": "sync",
+          "parameterTypes": [
+            "java.lang.Long",
             "jakarta.servlet.http.HttpSession"
           ]
         },
@@ -1101,6 +1091,13 @@
         {
           "name": "getCorp",
           "parameterTypes": [
+            "jakarta.servlet.http.HttpSession"
+          ]
+        },
+        {
+          "name": "upsert",
+          "parameterTypes": [
+            "dev.qingzhou.pushserver.model.dto.portal.PortalCorpConfigRequest",
             "jakarta.servlet.http.HttpSession"
           ]
         }
@@ -1185,12 +1182,6 @@
           "name": "<init>",
           "parameterTypes": [
             "dev.qingzhou.pushserver.service.PortalProxyConfigService"
-          ]
-        },
-        {
-          "name": "delete",
-          "parameterTypes": [
-            "jakarta.servlet.http.HttpSession"
           ]
         },
         {
@@ -1290,11 +1281,32 @@
         {
           "name": "<init>",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.manager.wecom.WecomAgentInfo",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
         },
         {
-          "name": "handlePortalException",
+          "name": "setAvatarUrl",
           "parameterTypes": [
-            "dev.qingzhou.pushserver.exception.PortalException"
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setDescription",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setName",
+          "parameterTypes": [
+            "java.lang.String"
           ]
         }
       ]
@@ -1620,6 +1632,55 @@
       ]
     },
     {
+      "type": "dev.qingzhou.pushserver.model.dto.portal.PortalAppCreateRequest",
+      "fields": [
+        {
+          "name": "agentId"
+        },
+        {
+          "name": "secret"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "setAgentId",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setSecret",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "dev.qingzhou.pushserver.model.dto.portal.PortalCorpConfigRequest",
+      "fields": [
+        {
+          "name": "corpId"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "setCorpId",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
       "type": "dev.qingzhou.pushserver.model.dto.portal.PortalLoginRequest",
       "methods": [
         {
@@ -1668,12 +1729,6 @@
           "name": "setArticles",
           "parameterTypes": [
             "java.util.List"
-          ]
-        },
-        {
-          "name": "setBtnText",
-          "parameterTypes": [
-            "java.lang.String"
           ]
         },
         {
@@ -1896,6 +1951,26 @@
           "parameterTypes": []
         },
         {
+          "name": "getCorpId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCreatedAt",
+          "parameterTypes": []
+        },
+        {
+          "name": "getId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUpdatedAt",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUserId",
+          "parameterTypes": []
+        },
+        {
           "name": "setCorpId",
           "parameterTypes": [
             "java.lang.String"
@@ -2028,12 +2103,6 @@
         },
         {
           "name": "setDescription",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setErrorMessage",
           "parameterTypes": [
             "java.lang.String"
           ]
@@ -2293,6 +2362,50 @@
           "parameterTypes": []
         },
         {
+          "name": "getAgentId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getAvatarUrl",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCreatedAt",
+          "parameterTypes": []
+        },
+        {
+          "name": "getDescription",
+          "parameterTypes": []
+        },
+        {
+          "name": "getEncodingAesKey",
+          "parameterTypes": []
+        },
+        {
+          "name": "getId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getName",
+          "parameterTypes": []
+        },
+        {
+          "name": "getSecret",
+          "parameterTypes": []
+        },
+        {
+          "name": "getToken",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUpdatedAt",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUserId",
+          "parameterTypes": []
+        },
+        {
           "name": "setAgentId",
           "parameterTypes": [
             "java.lang.String"
@@ -2317,12 +2430,6 @@
           ]
         },
         {
-          "name": "setEncodingAesKey",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
           "name": "setId",
           "parameterTypes": [
             "java.lang.Long"
@@ -2336,12 +2443,6 @@
         },
         {
           "name": "setSecret",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "setToken",
           "parameterTypes": [
             "java.lang.String"
           ]
@@ -2374,19 +2475,6 @@
       ]
     },
     {
-      "type": "dev.qingzhou.pushserver.model.vo.portal.DashboardChartsResponse$DistributionSlice",
-      "methods": [
-        {
-          "name": "getName",
-          "parameterTypes": []
-        },
-        {
-          "name": "getValue",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
       "type": "dev.qingzhou.pushserver.model.vo.portal.DashboardChartsResponse$TrendPoint",
       "methods": [
         {
@@ -2395,31 +2483,6 @@
         },
         {
           "name": "getDate",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "dev.qingzhou.pushserver.model.vo.portal.DashboardLogResponse",
-      "methods": [
-        {
-          "name": "getAppName",
-          "parameterTypes": []
-        },
-        {
-          "name": "getErrorMsg",
-          "parameterTypes": []
-        },
-        {
-          "name": "getReceiver",
-          "parameterTypes": []
-        },
-        {
-          "name": "getStatus",
-          "parameterTypes": []
-        },
-        {
-          "name": "getTime",
           "parameterTypes": []
         }
       ]
@@ -2772,12 +2835,6 @@
           ]
         },
         {
-          "name": "removeByAppId",
-          "parameterTypes": [
-            "java.lang.Long"
-          ]
-        },
-        {
           "name": "requireAppByApiKey",
           "parameterTypes": [
             "java.lang.String"
@@ -2828,6 +2885,13 @@
           "name": "requireByUserId",
           "parameterTypes": [
             "java.lang.Long"
+          ]
+        },
+        {
+          "name": "upsert",
+          "parameterTypes": [
+            "java.lang.Long",
+            "java.lang.String"
           ]
         }
       ]
@@ -2900,12 +2964,6 @@
           ]
         },
         {
-          "name": "deleteByUserId",
-          "parameterTypes": [
-            "java.lang.Long"
-          ]
-        },
-        {
           "name": "getByUserId",
           "parameterTypes": [
             "java.lang.Long"
@@ -2972,6 +3030,14 @@
           ]
         },
         {
+          "name": "addApp",
+          "parameterTypes": [
+            "java.lang.Long",
+            "java.lang.String",
+            "java.lang.String"
+          ]
+        },
+        {
           "name": "listByUser",
           "parameterTypes": [
             "java.lang.Long"
@@ -2979,6 +3045,13 @@
         },
         {
           "name": "requireByUser",
+          "parameterTypes": [
+            "java.lang.Long",
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "syncApp",
           "parameterTypes": [
             "java.lang.Long",
             "java.lang.Long"
@@ -3023,10 +3096,6 @@
             "java.lang.String",
             "java.lang.String"
           ]
-        },
-        {
-          "name": "getTurnstileSiteKey",
-          "parameterTypes": []
         },
         {
           "name": "isTurnstileEnabled",
@@ -3357,9 +3426,6 @@
     },
     {
       "type": "java.lang.Object[]"
-    },
-    {
-      "type": "java.lang.Record"
     },
     {
       "type": "java.lang.RuntimeException"
@@ -3901,13 +3967,6 @@
     {
       "type": "org.apache.ibatis.session.SqlSession",
       "methods": [
-        {
-          "name": "delete",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.Object"
-          ]
-        },
         {
           "name": "insert",
           "parameterTypes": [
@@ -10686,6 +10745,9 @@
       "glob": "sqlite-jdbc.properties"
     },
     {
+      "glob": "static/.well-known/appspecific/com.chrome.devtools.json"
+    },
+    {
       "glob": "static/assets/DashboardView-BKGHLnEP.js"
     },
     {
@@ -10704,10 +10766,19 @@
       "glob": "static/assets/index-sMwk8kPl.css"
     },
     {
+      "glob": "static/favicon.png"
+    },
+    {
       "glob": "static/index.html"
     },
     {
       "glob": "static/logo.png"
+    },
+    {
+      "glob": "static/system/content.css.map"
+    },
+    {
+      "glob": "static/system/sidebar.css.map"
     },
     {
       "module": "java.base",
