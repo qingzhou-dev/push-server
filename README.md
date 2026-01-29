@@ -72,6 +72,10 @@ flowchart LR
 | :---: | :---: |
 | <img src="docs/images/serrings.png" width="100%"> | <img src="docs/images/user.png" width="100%"> |
 
+|                       代理配置                        |                    版本更新提示                     |
+|:-------------------------------------------------:|:---------------------------------------------:|
+| <img src="docs/images/proxy.png" width="100%"> | <img src="docs/images/version.png" width="100%"> |
+
 ---
 
 ## 🚀 快速开始 (Docker)
