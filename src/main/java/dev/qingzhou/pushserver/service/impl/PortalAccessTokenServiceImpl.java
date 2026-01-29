@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import dev.qingzhou.pushserver.manager.wecom.WecomApiClient;
 import dev.qingzhou.pushserver.manager.wecom.WecomToken;
+import dev.qingzhou.pushserver.model.entity.portal.PortalProxyConfig;
 import dev.qingzhou.pushserver.service.PortalAccessTokenService;
 import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Component;
@@ -25,18 +26,18 @@ public class PortalAccessTokenServiceImpl implements PortalAccessTokenService {
     }
 
     @Override
-    public WecomToken fetchToken(String corpId, String secret) {
-        return wecomApiClient.getToken(corpId, secret);
+    public WecomToken fetchToken(String corpId, String secret, PortalProxyConfig proxyConfig) {
+        return wecomApiClient.getToken(corpId, secret, proxyConfig);
     }
 
     @Override
-    public String getToken(Long appId, String corpId, String secret) {
+    public String getToken(Long appId, String corpId, String secret, PortalProxyConfig proxyConfig) {
         CachedToken cached = cache.getIfPresent(appId);
         long now = System.currentTimeMillis();
         if (cached != null && cached.expireAtMillis > now) {
             return cached.value;
         }
-        WecomToken token = fetchToken(corpId, secret);
+        WecomToken token = fetchToken(corpId, secret, proxyConfig);
         int expiresIn = token.getExpiresIn() != null ? token.getExpiresIn() : DEFAULT_EXPIRES_IN;
         long expireAt = now + TimeUnit.SECONDS.toMillis(expiresIn) - EXPIRE_BUFFER_MILLIS;
         if (expireAt < now) {

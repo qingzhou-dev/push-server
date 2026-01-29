@@ -3,25 +3,59 @@ package dev.qingzhou.pushserver.manager.wecom;
 import dev.qingzhou.pushserver.config.PortalWecomProperties;
 import dev.qingzhou.pushserver.exception.PortalException;
 import dev.qingzhou.pushserver.exception.PortalStatus;
+import dev.qingzhou.pushserver.model.entity.portal.PortalProxyConfig;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
+
+import java.net.Authenticator;
+import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
+import java.net.ProxySelector;
+import java.net.http.HttpClient;
 
 @Component
 public class WecomApiClient {
 
-    private final RestClient restClient;
+    private final PortalWecomProperties properties;
+    private final RestClient defaultClient;
 
     public WecomApiClient(PortalWecomProperties properties) {
-        this.restClient = RestClient.builder()
+        this.properties = properties;
+        this.defaultClient = RestClient.builder()
                 .baseUrl(properties.getBaseUrl())
                 .build();
     }
 
-    public WecomToken getToken(String corpId, String secret) {
+    private RestClient getClient(PortalProxyConfig proxyConfig) {
+        if (proxyConfig == null || !Boolean.TRUE.equals(proxyConfig.getActive())) {
+            return defaultClient;
+        }
+
+        HttpClient.Builder builder = HttpClient.newBuilder()
+                .proxy(ProxySelector.of(new InetSocketAddress(proxyConfig.getHost(), proxyConfig.getPort())));
+
+        if (StringUtils.hasText(proxyConfig.getUsername())) {
+            builder.authenticator(new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(proxyConfig.getUsername(), proxyConfig.getPassword().toCharArray());
+                }
+            });
+        }
+
+        return RestClient.builder()
+                .baseUrl(properties.getBaseUrl())
+                .requestFactory(new JdkClientHttpRequestFactory(builder.build()))
+                .build();
+    }
+
+    public WecomToken getToken(String corpId, String secret, PortalProxyConfig proxyConfig) {
         try {
-            WecomToken response = restClient.get()
+            WecomToken response = getClient(proxyConfig).get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/cgi-bin/gettoken")
                             .queryParam("corpid", corpId)
@@ -35,9 +69,9 @@ public class WecomApiClient {
         }
     }
 
-    public WecomAgentInfo getAgentInfo(String accessToken, String agentId) {
+    public WecomAgentInfo getAgentInfo(String accessToken, String agentId, PortalProxyConfig proxyConfig) {
         try {
-            WecomAgentInfo response = restClient.get()
+            WecomAgentInfo response = getClient(proxyConfig).get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/cgi-bin/agent/get")
                             .queryParam("access_token", accessToken)
@@ -51,9 +85,9 @@ public class WecomApiClient {
         }
     }
 
-    public WecomSendResponse sendMessage(String accessToken, Object payload) {
+    public WecomSendResponse sendMessage(String accessToken, Object payload, PortalProxyConfig proxyConfig) {
         try {
-            WecomSendResponse response = restClient.post()
+            WecomSendResponse response = getClient(proxyConfig).post()
                     .uri(uriBuilder -> uriBuilder
                             .path("/cgi-bin/message/send")
                             .queryParam("access_token", accessToken)
@@ -68,6 +102,25 @@ public class WecomApiClient {
             return response;
         } catch (RestClientException ex) {
             throw new PortalException(PortalStatus.BAD_GATEWAY, "调用企业微信 message/send 接口失败", ex);
+        }
+    }
+
+    public void testConnectivity(PortalProxyConfig proxyConfig) {
+        if (proxyConfig == null) {
+            return;
+        }
+        try {
+            // 尝试访问企业微信根域名，仅测试网络连通性
+            getClient(proxyConfig).get()
+                    .uri("/")
+                    .retrieve()
+                    .toBodilessEntity();
+        } catch (Exception ex) {
+            String msg = ex.getMessage();
+            if (ex.getCause() != null) {
+                msg += " (" + ex.getCause().getMessage() + ")";
+            }
+            throw new PortalException(PortalStatus.BAD_REQUEST, "代理连接测试失败: " + msg);
         }
     }
 
