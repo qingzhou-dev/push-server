@@ -1,3 +1,5 @@
+![logo.png](docs/images/logo.png)
+
 # push-server
 
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0+-green.svg)
